@@ -1,0 +1,253 @@
+<main xmlns:th="http://www.thymeleaf.org">
+    <link rel="stylesheet" href="/profile-page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!--    <header>-->
+        <nav>
+            <div class="nav-left">
+                <img  alt="">
+                <input type="text" placeholder="Search Socialhorse..">
+
+            </div>
+
+            <div class="nav-middle">
+                <a th:href="@{/feed}" >
+                    <i class="fa fa-home"></i>
+                </a>
+
+                <a href="#">
+                    <i class="fa fa-user-friends"></i>
+                </a>
+
+                <a th:href="@{|/users/${#authentication.principal.username}|}" class="active">
+                    <i class="fa fa-users"></i>
+                </a>
+            </div>
+
+            <div class="nav-right">
+                <span class="profile"></span>
+
+                <a href="#">
+                    <i class="fa fa-bell"></i>
+                </a>
+
+            </div>
+        </nav>
+
+
+<!--        <div class="tb">-->
+<!--&lt;!&ndash;            todo upload own logo&ndash;&gt;-->
+<!--            <div class="td" id="logo">-->
+<!--                <img src="https://previews.123rf.com/images/vectorstockcompany/vectorstockcompany1808/vectorstockcompany180815739/108455229-horse-vector-icon-isolated-on-transparent-background-horse-logo-concept.jpg"-->
+<!--                     alt=""><i class="fab fa-facebook-square"></i>-->
+<!--            </div>-->
+
+<!--            <div class="td" id="search-form">-->
+<!--                <form method="get" action="#">-->
+<!--                    <input type="text" placeholder="Search">-->
+<!--                    <button type="submit"><i class="material-icons">search</i></button>-->
+<!--                </form>-->
+
+<!--        </div>-->
+<!--        </div>-->
+<!--    </header>-->
+
+<!--    Todo Refactor here-->
+    <div id="profile-upper">
+        <div id="profile-banner-image">
+            <img th:if="${user.images.size() >= 2}" th:src="@{|/images/${image.get(1).getId()}|}">
+            <img th:if="${user.images.size() == 1 || user.images.size() == 0 }" src="https://wallpapers.com/images/hd/hd-country-life-at-night-vvxmbqzkr4uumuni.jpg">
+        </div>
+
+        <div id="profile-d" >
+            <div id="profile-pic" >
+
+                <img th:if="${imageIsPresent == false and user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                <img th:if="${imageIsPresent == true and user.images.size()  <=  2 and user.images.size()  >  0 }" th:src="@{|/images/${image.get(0).getId()}|}">
+                <img th:if="${imageIsPresent == true and user.images.size()  >=  3 }" th:src="@{|/images/${image.get(image.size() - 1).getId()}|}">
+
+            </div>
+<!--            ToDo add if image is not present -> add custom image, like 'unavailable"-->
+            <div id="u-name" th:text="${user.getFirstName() + ' '+ user.getLastName()}"></div>
+
+        </div>
+<!--        buttons add friend, write message -->
+
+
+
+
+
+
+        <div id="black-grd"></div>
+
+    </div>
+    <div id="main-content">
+        <div class="tb">
+            <div class="td" id="l-col">
+<!--                Make this button invisible if we are on own page-->
+                    <button class="button-44" role="button">Add Friend</button>
+                    <button class="button-44" role="button">Write Msg</button>
+                <br><br>
+                    <div>
+                        <button class="button-44" role="button">Follow</button>
+                        <button class="button-44" role="button"><a th:href="@{|/users/update/${user.getId()}|}">Update user</a></button>
+                    </div>
+
+
+               <p th:text="${user.getEmail()}"></p>
+               <p th:text="${user.getCountry()}"></p>
+               <p th:if="${user.getAge() != 0}" th:text="${user.getAge() + ' years'}"></p>
+
+                <div class="l-cnt">
+                    <div class="cnt-label">
+                        <i class="l-i" id="l-i-i"></i>
+                        <span th:text="${user.getBio()}"></span>
+                    </div>
+                    <div id="i-box">
+<!--                        <div id="intro-line">Front-end Enginee/r</div>-->
+                        <div id="u-occ"></div>
+                    </div>
+                </div>
+                <div id="t-box">
+<!--                    ToDo add own pages here -->
+                    <a href="#">Privacy</a> <a href="#">Terms</a> <a href="#">Advertising</a> <a href="#">Ad Choices</a> <a href="#">Cookies</a> <span id="t-more">More<i class="material-icons">arrow_drop_down</i></span>
+                </div>
+            </div>
+            <div class="td" id="m-col">
+                <div>
+                    <div class="post" th:each="post, iter : ${posts}">
+                        <div class="post-top">
+                            <div class="dp">
+                                <a th:href="@{|/users/${post.getUser().getUsername()}|}">
+                                    <img th:if="${imageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >
+                                    <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
+                                </a>
+                            </div>
+                            <div class="post-info">
+                                <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
+                                <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
+                                <span class="time" th:text="${post.getCreationDate()}"></span>
+                            </div>
+                            <a th:href="@{|/posts/delete/${post.id}|}" style="position: relative;left: 291px"><i class="fas fa-trash"></i></a>
+                            <a th:href="@{|/posts/update/${post.id}|}" style="position: relative;left: 291px"><i class="fas fa-edit"></i></a>
+                        </div>
+
+                        <div class="post-content">
+                            <div th:text="${post.body}"></div>
+
+                            <div id="post-image" th:if="${post.getImage() != null}" >
+                                <a th:href="'http://localhost:2402/post/images/' + ${post.getImage().id}" target="_blank" >
+                                    <img th:src="@{|/post/images/${post.getImage().id}|}"  />
+                                    <img th:if="${post.getImage() == null}" />
+                                </a>
+                            </div>
+
+                        </div>
+
+
+                        <div class="post-bottom">
+
+                            <button class="like__btn">
+                                <span id="count" th:text="${post.likeCounter}"></span>
+                                <span id="icon" th:if="${post.liked}"><i class="fas fa-thumbs-up"></i></span>
+                                <a th:href="@{|/posts/like/${post.id}|}" th:unless="${post.liked}"><i class="far fa-thumbs-up"></i></a>
+                            </button>
+                            <button class="like__btn-2">
+                                <span id="count-2" th:text="${post.dislikeCounter}"></span>
+                                <span id="icon-2" th:if="${post.disliked}"><i class="fas fa-thumbs-down"></i></span>
+                                <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i class="far fa-thumbs-down"></i></a>
+                            </button>
+
+
+
+                            <div class="action">
+                                <i class="far fa-comment"></i>
+                                <span>Comment</span>
+                            </div>
+                        </div>
+                    </div>
+<!--                    <div class="post" th:each="post, iter : ${posts}">-->
+<!--                        <div class="post-top">-->
+<!--                            <div class="dp">-->
+<!--                                <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >-->
+<!--                                <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >-->
+<!--                            </div>-->
+<!--                            <div class="post-info">-->
+<!--                                <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>-->
+<!--                                &lt;!&ndash;                    todo make proper show of creation data(1 day ago, 1 week ago , etc)&ndash;&gt;-->
+<!--                                <span class="time" th:text="${post.getCreationDate()}"></span>-->
+<!--                            </div>-->
+<!--                            <i class="fas fa-edit"></i>-->
+<!--                        </div>-->
+
+<!--                        <div class="post-content">-->
+<!--                            <div th:text="${post.body}"></div>-->
+
+<!--                            <div id="post-image" th:if="${post.getImage() != null}" >-->
+<!--                                <a th:href="'http://localhost:2402/post/images/' + ${post.getImage().id}" target="_blank" >-->
+<!--                                    <img th:src="@{|/post/images/${post.getImage().id}|}"  />-->
+<!--                                    <img th:if="${post.getImage() == null}" />-->
+<!--                                </a>-->
+<!--                            </div>-->
+
+<!--                        </div>-->
+
+
+<!--                        <div class="post-bottom">-->
+
+<!--                            <button class="like__btn">-->
+<!--                                <span id="count" th:text="${post.likeCounter}"></span>-->
+<!--                                <span id="icon" th:if="${post.liked}"><i class="fas fa-thumbs-up"></i></span>-->
+<!--                                <a th:href="@{|/posts/like/${post.id}|}" th:unless="${post.liked}"><i class="far fa-thumbs-up"></i></a>-->
+<!--                            </button>-->
+<!--                            <button class="like__btn-2">-->
+<!--                                <span id="count-2" th:text="${post.dislikeCounter}"></span>-->
+<!--                                <span id="icon-2" th:if="${post.disliked}"><i class="fas fa-thumbs-down"></i></span>-->
+<!--                                <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i class="far fa-thumbs-down"></i></a>-->
+<!--                            </button>-->
+
+<!--                            <div class="action">-->
+<!--                                <i class="far fa-comment"></i>-->
+<!--                                <span>Comment</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+<!--    <img th:src="@{|/images/${imageBackground.getId()}|}" alt="">-->
+
+
+    <script src="https://use.fontawesome.com/fe459689b4.js"></script>
+    <script>var btn1 = document.querySelector('#green');
+    var btn2 = document.querySelector('#red');
+
+    btn1.addEventListener('click', function() {
+
+        if (btn2.classList.contains('red')) {
+            btn2.classList.remove('red');
+        }
+        this.classList.toggle('green');
+
+    });
+
+    btn2.addEventListener('click', function() {
+
+        if (btn1.classList.contains('green')) {
+            btn1.classList.remove('green');
+        }
+        this.classList.toggle('red');
+
+    });
+
+    </script>
+
+</main>
+
