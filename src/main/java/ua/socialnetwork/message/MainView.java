@@ -37,10 +37,12 @@ public class MainView extends VerticalLayout {
         buildChat();
     }
 
+    //ToDO remove login form
     private void buildLogin() {
         login = new VerticalLayout() {{
             TextField field = new TextField();
-            field.setValue(u.getUsername());
+            field.setValue(u.getFullName());
+            field.setReadOnly(true);
             field.setPlaceholder("Please, introduce yourself");
             add(
                     field,
