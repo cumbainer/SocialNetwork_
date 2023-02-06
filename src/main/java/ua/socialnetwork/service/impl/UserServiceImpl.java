@@ -91,7 +91,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-
     //ToDO make 1 method to not duplicate code
 
     @Override

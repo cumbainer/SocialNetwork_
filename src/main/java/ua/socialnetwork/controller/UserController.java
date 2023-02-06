@@ -106,14 +106,7 @@ public class UserController {
         user.setEmail(oldUser.getEmail());
 
 
-        if(imageBackground.getSize() == 0 || imageBackground.getOriginalFilename() == null || imageBackground.isEmpty()){
-            userService.update(user, userImage);
-            return "redirect:/login";
-        }
-
-
         userService.update(user, userImage, imageBackground);
-
 
         return "redirect:/login";
     }
