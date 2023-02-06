@@ -32,8 +32,6 @@ public class PostController {
         boolean ifImageIsPresent = false;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        //ToDO put in try catch
         SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
         if(u.getImages().size() > 0){
@@ -92,28 +90,20 @@ public class PostController {
 
         String username = u.getUsername();
 
-        if(post_id != 0){
-            log.error("An error occurred in Post Controller, id " + post_id );
-            postService.delete(post_id);
-        }
-        log.info("A post with id" + post_id+ "has been deleted");
+
+        postService.delete(post_id);
+
 
         return "redirect:/users/"+username;
     }
 
 
 
-
     @GetMapping("/like/{post_id}")
     public String like(@PathVariable("post_id") Integer post_id, Model model){
 
-        //ToDO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
+        //TODO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
         Post post = postService.readById(post_id);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
-
-
 
         postService.makeReaction(post, PostAction.LIKE);
 
@@ -127,16 +117,12 @@ public class PostController {
     @GetMapping("/dislike/{post_id}")
     public String dislike(@PathVariable("post_id") Integer post_id, Model model){
 
-        //ToDO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
+        //TODO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
         Post post = postService.readById(post_id);
 
         postService.makeReaction(post, PostAction.DISLIKE);
         postService.create(post);
         return "redirect:/feed";
     }
-
-
-
-
 
 }

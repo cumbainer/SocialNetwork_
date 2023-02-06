@@ -67,12 +67,10 @@ public class UserController {
     @PostMapping("/update")
     public String update(@Validated User user, @RequestParam(value = "userImage", required = false) MultipartFile userImage,
                                                                                             BindingResult result){
-
         if(result.hasErrors()){
             log.warn("Binding result had an error in User Controller update with user: " +user.getUsername());
             return "update-user";
         }
-
         userService.update(user, userImage);
         user.setEditionDate(LocalDateTime.now());
         log.info("User with id: " + user.getId() + " has been updated");

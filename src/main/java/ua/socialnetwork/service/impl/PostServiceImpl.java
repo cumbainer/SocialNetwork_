@@ -77,9 +77,14 @@ public class PostServiceImpl implements PostService {
     }
     @Override
     public void delete(int id) {
-
+        if(id != 0){
         postRepo.delete(readById(id));
+        log.info("A post with id" + id+ "has been deleted");
+        }
+
+        log.error("An error occurred in Post Controller, id " + id );
     }
+
 
     @Override
     public List<Post> getAll() {
