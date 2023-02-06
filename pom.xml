@@ -19,184 +19,11 @@
     </properties>
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>com.vaadin</groupId>-->
-<!--            <artifactId>vaadin-spring-boot-starter</artifactId>-->
-<!--            <version>24.0.0.alpha9</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-devtools</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-configuration-processor</artifactId>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.rjeschke</groupId>-->
-<!--            <artifactId>txtmark</artifactId>-->
-<!--            <version>0.13</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.projectlombok</groupId>-->
-<!--            <artifactId>lombok</artifactId>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-test</artifactId>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-<!--    </dependencies>-->
-<!--&lt;!&ndash;    <dependencyManagement>&ndash;&gt;-->
-<!--&lt;!&ndash;        <dependencies>&ndash;&gt;-->
-<!--&lt;!&ndash;            <dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;                <groupId>com.vaadin</groupId>&ndash;&gt;-->
-<!--&lt;!&ndash;                <artifactId>vaadin-bom</artifactId>&ndash;&gt;-->
-<!--&lt;!&ndash;                <version>${vaadin.version}</version>&ndash;&gt;-->
-<!--&lt;!&ndash;                <type>pom</type>&ndash;&gt;-->
-<!--&lt;!&ndash;                <scope>import</scope>&ndash;&gt;-->
-<!--&lt;!&ndash;            </dependency>&ndash;&gt;-->
-<!--&lt;!&ndash;        </dependencies>&ndash;&gt;-->
-<!--&lt;!&ndash;    </dependencyManagement>&ndash;&gt;-->
-
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <excludes>-->
-<!--                        <exclude>-->
-<!--                            <groupId>org.projectlombok</groupId>-->
-<!--                            <artifactId>lombok</artifactId>-->
-<!--                        </exclude>-->
-<!--                    </excludes>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-<!--    <repositories>-->
-
-<!--        <repository>-->
-<!--            <id>vaadin-prereleases</id>-->
-<!--            <url>-->
-<!--                https://maven.vaadin.com/vaadin-prereleases/-->
-<!--            </url>-->
-<!--        </repository>-->
-
-<!--        <repository>-->
-<!--            <id>spring-milestones</id>-->
-<!--            <name>Spring Milestones</name>-->
-<!--            <url>https://repo.spring.io/milestone</url>-->
-<!--            <snapshots>-->
-<!--                <enabled>false</enabled>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
-<!--        <repository>-->
-<!--            <id>spring-snapshots</id>-->
-<!--            <name>Spring Snapshots</name>-->
-<!--            <url>https://repo.spring.io/snapshot</url>-->
-<!--            <releases>-->
-<!--                <enabled>false</enabled>-->
-<!--            </releases>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-<!--    <pluginRepositories>-->
-
-<!--        <pluginRepository>-->
-<!--            <id>vaadin-prereleases</id>-->
-<!--            <url>-->
-<!--                https://maven.vaadin.com/vaadin-prereleases/-->
-<!--            </url>-->
-<!--        </pluginRepository>-->
-
-<!--        <pluginRepository>-->
-<!--            <id>spring-milestones</id>-->
-<!--            <name>Spring Milestones</name>-->
-<!--            <url>https://repo.spring.io/milestone</url>-->
-<!--            <snapshots>-->
-<!--                <enabled>false</enabled>-->
-<!--            </snapshots>-->
-<!--        </pluginRepository>-->
-<!--        <pluginRepository>-->
-<!--            <id>spring-snapshots</id>-->
-<!--            <name>Spring Snapshots</name>-->
-<!--            <url>https://repo.spring.io/snapshot</url>-->
-<!--            <releases>-->
-<!--                <enabled>false</enabled>-->
-<!--            </releases>-->
-<!--        </pluginRepository>-->
-<!--    </pluginRepositories>-->
-
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>production</id>-->
-<!--            <build>-->
-<!--                <plugins>-->
-<!--                    <plugin>-->
-<!--                        <groupId>com.vaadin</groupId>-->
-<!--                        <artifactId>vaadin-maven-plugin</artifactId>-->
-<!--                        <version>${vaadin.version}</version>-->
-<!--                        <executions>-->
-<!--                            <execution>-->
-<!--                                <id>frontend</id>-->
-<!--                                <phase>compile</phase>-->
-<!--                                <goals>-->
-<!--                                    <goal>prepare-frontend</goal>-->
-<!--                                    <goal>build-frontend</goal>-->
-<!--                                </goals>-->
-<!--                                <configuration>-->
-<!--                                    <productionMode>true</productionMode>-->
-<!--                                </configuration>-->
-<!--                            </execution>-->
-<!--                        </executions>-->
-<!--                    </plugin>-->
-<!--                </plugins>-->
-<!--            </build>-->
-<!--        </profile>-->
-<!--    </profiles>-->
-
-<!--</project>-->
-
-
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
             <version>24.0.0.alpha9</version>
         </dependency>
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.vaadin/vaadin-server &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.vaadin</groupId>-->
-        <!--            <artifactId>vaadin-server</artifactId>-->
-        <!--            <version>8.19.0</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.vaadin/vaadin-client &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.vaadin</groupId>-->
-        <!--            <artifactId>vaadin-client</artifactId>-->
-        <!--            <version>8.19.0</version>-->
-        <!--            <scope>provided</scope>-->
-        <!--        </dependency>-->
-
-
-        <!--        &lt;!&ndash; https://mvnrepository.com/artifact/com.vaadin/vaadin-core &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.vaadin</groupId>-->
-        <!--            <artifactId>vaadin-core</artifactId>-->
-        <!--            <version>24.0.0.alpha10</version>-->
-        <!--        </dependency>-->
-
-
-
-
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -273,6 +100,8 @@
             <artifactId>guava</artifactId>
             <version>31.1-jre</version>
         </dependency>
+
+
 
 
 

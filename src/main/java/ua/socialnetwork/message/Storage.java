@@ -8,7 +8,10 @@ import com.vaadin.flow.component.page.Push;
 import com.vaadin.flow.shared.Registration;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import ua.socialnetwork.security.SecurityUser;
 
 import java.io.Serializable;
 import java.util.Queue;
@@ -19,6 +22,8 @@ public class Storage {
     @Getter
     private Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
     private ComponentEventBus eventBus = new ComponentEventBus(new Div());
+
+
 
     @Getter
     @AllArgsConstructor
@@ -40,6 +45,7 @@ public class Storage {
 
     public void addRecordJoined(String user) {
         messages.add(new ChatMessage("", user));
+
         eventBus.fireEvent(new ChatEvent());
     }
 

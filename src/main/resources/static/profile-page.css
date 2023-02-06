@@ -8,6 +8,7 @@ body {
 
 }
 
+
 body,
 input,
 button {
@@ -49,6 +50,8 @@ button {
 }
 
 main {
+
+
     width: 1280px;
     margin: 0 auto;
     background-color: #e9ebee;
@@ -1177,12 +1180,11 @@ button{
 /*NAV*/
 
 nav{
-    height:80px;
+    height:70px;
     width:100%;
     padding: 0 2rem;
     display:flex;
     justify-content: space-between;
-    /*background-color: #4267b2;*/
     background-color: #fff;
     box-shadow: 0px 1px 3px #ccc;
     position:sticky;
@@ -1212,7 +1214,7 @@ nav .nav-left > input{
 nav .nav-middle{
     display:flex;
     align-items:flex-end;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 nav .nav-middle a{
@@ -1264,4 +1266,7 @@ nav .nav-right a{
 
 nav .nav-right a > i{
     font-size:18px;
+}
+nav .input-search:focus-visible{
+    outline-width: 0!important;
 }

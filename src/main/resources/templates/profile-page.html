@@ -1,56 +1,55 @@
+<nav>
+    <div class="nav-left position-relative d-flex flex-column">
+        <div class="card mt-3 mb-1 border-0" >
+            <div class="header">
+                <img  alt="">
+                <input class="input-search border-0" style="background-color: #eee; border-radius: 25px; padding: 7px;" type="text" placeholder="Search Socialhorse`s..." data-search >
+            </div>
+        </div>
+        <div class="user-cards d-flex flex-column w-100">
+            <div class="card user-card mb-1" th:each="user, iter: ${users}" style="display: none;">
+                <a class="text-decoration-none text-muted" th:href="@{|/users/${user.username}|}">
+
+
+                    <div class="header" data-header th:text="${user.firstName}+' '+${user.lastName}">
+
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-middle">
+        <a th:href="@{/feed}">
+            <i class="fa fa-home"></i>
+            <a href="#">
+                <i class="fa fa-user-friends"></i>
+            </a>
+        </a>
+
+        <a th:href="@{|/users/${#authentication.principal.username}|}" class="active" >
+            <i class="fa fa-users"></i>
+        </a>
+        <a th:href="@{/msg/chat}">
+            <i class="	fas fa-comment-alt"></i>
+        </a>
+    </div>
+
+    <div class="nav-right">
+        <span class="profile"></span>
+
+        <a href="#">
+            <i class="fa fa-bell"></i>
+        </a>
+
+    </div>
+</nav>
 <main xmlns:th="http://www.thymeleaf.org">
+
+
     <link rel="stylesheet" href="/profile-page.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<!--    <header>-->
-        <nav>
-            <div class="nav-left">
-                <img  alt="">
-                <input type="text" placeholder="Search Socialhorse..">
-
-            </div>
-
-            <div class="nav-middle">
-                <a th:href="@{/feed}" >
-                    <i class="fa fa-home"></i>
-                </a>
-
-                <a href="#">
-                    <i class="fa fa-user-friends"></i>
-                </a>
-
-                <a th:href="@{|/users/${#authentication.principal.username}|}" class="active">
-                    <i class="fa fa-users"></i>
-                </a>
-            </div>
-
-            <div class="nav-right">
-                <span class="profile"></span>
-
-                <a href="#">
-                    <i class="fa fa-bell"></i>
-                </a>
-
-            </div>
-        </nav>
-
-
-<!--        <div class="tb">-->
-<!--&lt;!&ndash;            todo upload own logo&ndash;&gt;-->
-<!--            <div class="td" id="logo">-->
-<!--                <img src="https://previews.123rf.com/images/vectorstockcompany/vectorstockcompany1808/vectorstockcompany180815739/108455229-horse-vector-icon-isolated-on-transparent-background-horse-logo-concept.jpg"-->
-<!--                     alt=""><i class="fab fa-facebook-square"></i>-->
-<!--            </div>-->
-
-<!--            <div class="td" id="search-form">-->
-<!--                <form method="get" action="#">-->
-<!--                    <input type="text" placeholder="Search">-->
-<!--                    <button type="submit"><i class="material-icons">search</i></button>-->
-<!--                </form>-->
-
-<!--        </div>-->
-<!--        </div>-->
-<!--    </header>-->
 
 <!--    Todo Refactor here-->
     <div id="profile-upper">
@@ -71,10 +70,6 @@
             <div id="u-name" th:text="${user.getFirstName() + ' '+ user.getLastName()}"></div>
 
         </div>
-<!--        buttons add friend, write message -->
-
-
-
 
 
 
@@ -166,52 +161,6 @@
                             </div>
                         </div>
                     </div>
-<!--                    <div class="post" th:each="post, iter : ${posts}">-->
-<!--                        <div class="post-top">-->
-<!--                            <div class="dp">-->
-<!--                                <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >-->
-<!--                                <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >-->
-<!--                            </div>-->
-<!--                            <div class="post-info">-->
-<!--                                <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>-->
-<!--                                &lt;!&ndash;                    todo make proper show of creation data(1 day ago, 1 week ago , etc)&ndash;&gt;-->
-<!--                                <span class="time" th:text="${post.getCreationDate()}"></span>-->
-<!--                            </div>-->
-<!--                            <i class="fas fa-edit"></i>-->
-<!--                        </div>-->
-
-<!--                        <div class="post-content">-->
-<!--                            <div th:text="${post.body}"></div>-->
-
-<!--                            <div id="post-image" th:if="${post.getImage() != null}" >-->
-<!--                                <a th:href="'http://localhost:2402/post/images/' + ${post.getImage().id}" target="_blank" >-->
-<!--                                    <img th:src="@{|/post/images/${post.getImage().id}|}"  />-->
-<!--                                    <img th:if="${post.getImage() == null}" />-->
-<!--                                </a>-->
-<!--                            </div>-->
-
-<!--                        </div>-->
-
-
-<!--                        <div class="post-bottom">-->
-
-<!--                            <button class="like__btn">-->
-<!--                                <span id="count" th:text="${post.likeCounter}"></span>-->
-<!--                                <span id="icon" th:if="${post.liked}"><i class="fas fa-thumbs-up"></i></span>-->
-<!--                                <a th:href="@{|/posts/like/${post.id}|}" th:unless="${post.liked}"><i class="far fa-thumbs-up"></i></a>-->
-<!--                            </button>-->
-<!--                            <button class="like__btn-2">-->
-<!--                                <span id="count-2" th:text="${post.dislikeCounter}"></span>-->
-<!--                                <span id="icon-2" th:if="${post.disliked}"><i class="fas fa-thumbs-down"></i></span>-->
-<!--                                <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i class="far fa-thumbs-down"></i></a>-->
-<!--                            </button>-->
-
-<!--                            <div class="action">-->
-<!--                                <i class="far fa-comment"></i>-->
-<!--                                <span>Comment</span>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
 

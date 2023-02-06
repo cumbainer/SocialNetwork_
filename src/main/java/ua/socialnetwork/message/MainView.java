@@ -37,7 +37,7 @@ public class MainView extends VerticalLayout {
         buildChat();
     }
 
-    //ToDO remove login form
+//    ToDO remove login form
     private void buildLogin() {
         login = new VerticalLayout() {{
             TextField field = new TextField();
@@ -46,7 +46,7 @@ public class MainView extends VerticalLayout {
             field.setPlaceholder("Please, introduce yourself");
             add(
                     field,
-                    new Button("Login") {{
+                    new Button("Join") {{
                         addClickListener(click -> {
                             login.setVisible(false);
                             chat.setVisible(true);

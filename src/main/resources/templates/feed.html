@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<!--<div th:replace="_searchbar"></div>-->
+
 <nav>
     <div class="nav-left position-relative d-flex flex-column">
         <div class="card mt-3 mb-1 border-0" >
@@ -30,6 +30,7 @@
             <div class="card user-card mb-1" th:each="user, iter: ${users}" style="display: none;">
                 <a class="text-decoration-none text-muted" th:href="@{|/users/${user.username}|}">
 
+
                 <div class="header" data-header th:text="${user.firstName}+' '+${user.lastName}">
 
                 </div>
@@ -41,14 +42,16 @@
     <div class="nav-middle">
         <a th:href="@{/feed}" class="active">
             <i class="fa fa-home"></i>
-        </a>
-
-        <a href="#">
-            <i class="fa fa-user-friends"></i>
+            <a href="#">
+                <i class="fa fa-user-friends"></i>
+            </a>
         </a>
 
         <a th:href="@{|/users/${#authentication.principal.username}|}" >
             <i class="fa fa-users"></i>
+        </a>
+        <a th:href="@{/msg/chat}">
+            <i class="	fas fa-comment-alt"></i>
         </a>
     </div>
 
@@ -166,15 +169,18 @@
         <div class="post" th:each="post, iter : ${posts}">
             <div class="post-top">
                 <div class="dp">
-                    <a th:href="@{|/users/${post.getUser().getUsername()}|}">
+<!--                    <a th:href="@{|/users/${post.getUser().getUsername()}|}">-->
                         <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >
                         <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
-                    </a>
+<!--                    </a>-->
                 </div>
                 <div class="post-info">
-                    <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
+                    <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}" style="text-decoration: #0e0e0e">
+                        <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
+                    </a>
 <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
-                    <span class="time" th:text="${post.getCreationDate()}"></span>
+                    <span class="time" th:text="${post.getCreationDate()}" style = "position:relative; top: -20px;" ></span>
+
                 </div>
 
                 <a th:href="@{|/posts/update/${post.id}|}" style="position: relative;left: 291px"><i class="fas fa-edit"></i></a>

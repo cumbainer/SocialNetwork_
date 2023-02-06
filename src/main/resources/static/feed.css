@@ -531,6 +531,13 @@ nav .nav-right a > i{
 nav .input-search:focus-visible{
     outline-width: 0!important;
 }
+.underline{
+    text-decoration: none;
+}
+.underline a:active{
+    text-decoration: none;
+
+}
 
 
 
