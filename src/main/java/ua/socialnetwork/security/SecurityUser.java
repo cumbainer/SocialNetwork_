@@ -12,6 +12,7 @@ import ua.socialnetwork.entity.UserImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @AllArgsConstructor
@@ -72,6 +73,8 @@ public class SecurityUser implements UserDetails {
     public int getImage() {
         return user.getImages().get(0).getId();
     }
+
+
 
     public int getImageForFeed(){
         List<UserImage> out = user.getImages();

@@ -38,6 +38,9 @@ public class PostController {
             ifImageIsPresent = true;
         }
 
+
+
+
         model.addAttribute("ifImageIsPresent", ifImageIsPresent);
         model.addAttribute("posts", postService.getAll());
         model.addAttribute("newPost", new Post());
@@ -102,7 +105,7 @@ public class PostController {
     @GetMapping("/like/{post_id}")
     public String like(@PathVariable("post_id") Integer post_id, Model model){
 
-        //TODO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
+        //TODO fix likeCounter (attach to a post , the bug is each every post gets all previous post likes)
         Post post = postService.readById(post_id);
 
         postService.makeReaction(post, PostAction.LIKE);
@@ -117,7 +120,7 @@ public class PostController {
     @GetMapping("/dislike/{post_id}")
     public String dislike(@PathVariable("post_id") Integer post_id, Model model){
 
-        //TODO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
+        //TODO fix likeCounter (attach to a post , the bug is each every post gets all previous post likes)
         Post post = postService.readById(post_id);
 
         postService.makeReaction(post, PostAction.DISLIKE);

@@ -5,13 +5,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ua.socialnetwork.entity.enums.FriendStatus;
-import ua.socialnetwork.service.impl.FriendService;
 
 import java.time.LocalDateTime;
 
-@Entity(name = "friend")
+@Entity
 @Data
 @NoArgsConstructor
+@Table(name = "friend")
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Friend {
     private User receiver;
 
     @Column(name = "status")
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private FriendStatus status;
 
     @Column(name = "sendingRequestDate")

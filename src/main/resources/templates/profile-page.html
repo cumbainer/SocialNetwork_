@@ -80,7 +80,7 @@
         <div class="tb">
             <div class="td" id="l-col">
 <!--                Make this button invisible if we are on own page-->
-                    <button class="button-44" role="button">Add Friend</button>
+                    <button class="button-44" role="button"><a th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
                     <button class="button-44" role="button">Write Msg</button>
                 <br><br>
                     <div>

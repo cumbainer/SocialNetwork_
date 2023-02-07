@@ -77,16 +77,12 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
-
-
     @OneToMany(mappedBy = "sender")
     private List<Friend> sentRequest;
 
     @OneToMany(mappedBy = "receiver")
     private List<Friend> receivedRequests;
 
-//    @ManyToMany(mappedBy = "users")
-//    private List<UserUser> user;
 
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
@@ -98,7 +94,6 @@ public class User {
         images.add(image);
     }
 
-    //Needed to set user`s BACKGROUND image (which can not be changed)
     public void setBackgroundImageToUser(UserImage image){
         image.setUser(this);
         if(this.getImages().size() >= 1){
