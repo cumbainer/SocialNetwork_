@@ -1,39 +1,41 @@
 package ua.socialnetwork.entity;
 
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ua.socialnetwork.entity.enums.FriendStatus;
+import ua.socialnetwork.service.impl.FriendService;
 
 import java.time.LocalDateTime;
 
-@Entity
+@Entity(name = "friend")
 @Data
 @NoArgsConstructor
-@Table(name = "friend")
 public class Friend {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "friend_id")
     private int id;
 
-    @Enumerated
-    @Column(name = "status")
-    private FriendStatus status;
-
-    @Column(name = "creationDate")
-    private LocalDateTime creationDate;
-
-    @Column(name = "editionDate")
-    private LocalDateTime editionDate;
+    @ManyToOne
+    @JoinColumn(name = "sender_id")
+    private User sender;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = true)
-    private User user;
+    @JoinColumn(name = "receiver_id")
+    private User receiver;
 
-    /*ToDo PROBABLY make another field -> boolean accepted = false, when receiver accept friend request, this
-    variables goes true and the status changes to accepted, whatever its called
-    */
+    @Column(name = "status")
+    @Enumerated
+    private FriendStatus status;
+
+    @Column(name = "sendingRequestDate")
+    private LocalDateTime sendingRequestDate;
+
+    @Column(name = "acceptingRequestDate")
+    private LocalDateTime acceptingRequestDate;
+
+    @Column(name = "decliningRequestDate")
+    private LocalDateTime decliningRequestDate;
 
 }

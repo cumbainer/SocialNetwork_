@@ -161,6 +161,13 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll();
     }
 
+    @Override
+    public User addFriend(int id) {
+        User receiver = readById(id);
+
+        return null;
+    }
+
 
     private boolean ifUsernameExists(String username){
         Optional<User> user = userRepo.findUserByUsername(username);

@@ -17,5 +17,7 @@ public interface UserService {
 
     List<User> getAll();
 
+    User addFriend(int id);
+
 
 }

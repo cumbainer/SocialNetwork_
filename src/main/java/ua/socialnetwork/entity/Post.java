@@ -19,15 +19,10 @@ public class Post {
     @Column(name = "post_id")
     private int id;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "body")
     private String body;
 
     //TODO make like/dislike attached to an user
-
-
 
     @Column(name = "liked")
     private boolean liked;
@@ -48,9 +43,6 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime editionDate;
 
-    @Column(name = "deletionDate")
-    private LocalDateTime deletionDate;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
@@ -65,13 +57,11 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
                 ", body='" + body + '\'' +
                 ", liked=" + liked +
                 ", disliked=" + disliked +
                 ", creationDate=" + creationDate +
                 ", editionDate=" + editionDate +
-                ", deletionDate=" + deletionDate +
                 ", comments=" + comments +
                 '}';
     }
