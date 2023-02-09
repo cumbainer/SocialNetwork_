@@ -140,5 +140,28 @@ public class UserController {
         return "profile-page";
     }
 
+    @GetMapping("/{username}/friends")
+    public String getFriendList(@PathVariable("username") String username, Model model){
+        User user = userService.readByUsername(username);
+
+        boolean ifImageIsPresent = false;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityUser u = (SecurityUser) authentication.getPrincipal();
+
+        if(u.getImages().size() > 0){
+            ifImageIsPresent = true;
+        }
+
+        model.addAttribute("imageIsPresent", ifImageIsPresent);
+        model.addAttribute("users", userService.getAll());
+
+        model.addAttribute("user", user);
+        model.addAttribute("image", user.getImages());
+
+        model.addAttribute("size", user.getImages().size());
+        return "friend-list";
+    }
+
 
 }

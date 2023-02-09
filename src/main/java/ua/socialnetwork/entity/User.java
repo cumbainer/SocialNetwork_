@@ -2,10 +2,7 @@ package ua.socialnetwork.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ua.socialnetwork.entity.enums.UserRole;
 import ua.socialnetwork.entity.enums.Gender;
 import ua.socialnetwork.serializer.UserSerializer;
@@ -13,13 +10,14 @@ import ua.socialnetwork.serializer.UserSerializer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @JsonSerialize(using = UserSerializer.class)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
-@ToString
 @Table(name = "users")
 public class User {
 
@@ -78,10 +76,10 @@ public class User {
     private List<Post> posts;
 
     @OneToMany(mappedBy = "sender")
-    private List<Friend> sentRequest;
+    private Set<Friend> sentRequest;
 
     @OneToMany(mappedBy = "receiver")
-    private List<Friend> receivedRequests;
+    private Set<Friend> receivedRequests;
 
 
 

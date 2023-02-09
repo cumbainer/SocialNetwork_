@@ -23,8 +23,6 @@ public class FriendController {
     private UserService userService;
     private FriendService friendService;
 
-
-
     @GetMapping("{sender_username}/add/{receiver_username}")
     public String addFriend(@PathVariable("sender_username") String senderUsername,
                             @PathVariable("receiver_username") String receiverUsername, HttpServletRequest request,
@@ -33,29 +31,25 @@ public class FriendController {
         String requestURL = request.getRequestURI();
         model.addAttribute("requestURL", requestURL);
 
-
-        User receiver = userService.readByUsername(senderUsername);
-        User sender = userService.readByUsername(receiverUsername);
-
+        User receiver = userService.readByUsername(receiverUsername);
+        User sender = userService.readByUsername(senderUsername);
 
         Friend friend = new Friend();
         friend.setSender(sender);
         friend.setReceiver(receiver);
 
-
-        List<Friend> friends = sender.getSentRequest();
-
-
-        friendService.create(friend, sender.getId());
-
-
-
-
-
+        friendService.create(friend,sender.getId(), receiver.getId());
 
         return "redirect:/feed";
     }
 
+    @GetMapping("/{friendId}/delete")
+    public String deleteFromFriend(@PathVariable("friendId") Integer friendId ){
+
+        friendService.removeFromFriends(friendId);
+
+        return "redirect:/feed";
+    }
 
 
 

@@ -20,19 +20,30 @@ public class FriendServiceImpl implements FriendService {
     private UserService userService;
 
     @Override
-    public Friend create(Friend friend, int receiverId) {
+    public Friend create(Friend friend, int senderId, int receiverId) {
         //Todo think of is later
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
 
+
+
         User receiver = userService.readById(receiverId);
+        User sender = userService.readById(senderId);
 
-
-
+        receiver.getReceivedRequests().add(friend);
+        sender.getSentRequest().add(friend);
 
         return friendRepo.save(friend);
+
+    }
+
+    @Override
+    public void removeFromFriends(int friendEntityId) {
+        Friend friend = friendRepo.findById(friendEntityId).orElse(null);
+
+        friendRepo.delete(friend);
 
     }
 }

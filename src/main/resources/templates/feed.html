@@ -42,7 +42,7 @@
     <div class="nav-middle">
         <a th:href="@{/feed}" class="active">
             <i class="fa fa-home"></i>
-            <a href="#">
+            <a th:href="@{|/users/${#authentication.principal.username}/friends|}">
                 <i class="fa fa-user-friends"></i>
             </a>
         </a>
@@ -58,7 +58,7 @@
     <div class="nav-right">
         <span class="profile"></span>
 
-        <a href="#">
+        <a >
             <i class="fa fa-bell"></i>
         </a>
 
@@ -169,13 +169,13 @@
         <div class="post" th:each="post, iter : ${posts}">
             <div class="post-top">
                 <div class="dp">
-<!--                    <a th:href="@{|/users/${post.getUser().getUsername()}|}">-->
+<!--                    TODO add perevirku-->
                         <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >
                         <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
 <!--                    </a>-->
                 </div>
-                <div class="post-info">
-                    <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}" style="text-decoration: #0e0e0e">
+                <div class="post-info" >
+                    <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}" style="text-decoration: #0e0e0e; color: #0e0e0e">
                         <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
                     </a>
 <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->

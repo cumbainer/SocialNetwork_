@@ -1,0 +1,93 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <nav>
+        <div class="nav-left position-relative d-flex flex-column">
+            <div class="card mt-3 mb-1 border-0" >
+                <div class="header">
+                    <img  alt="">
+                    <input class="input-search border-0" style="background-color: #eee; border-radius: 25px; padding: 7px;" type="text" placeholder="Search Socialhorse`s..." data-search >
+                </div>
+            </div>
+            <div class="user-cards d-flex flex-column w-100">
+                <div class="card user-card mb-1" th:each="user, iter: ${users}" style="display: none;">
+                    <a class="text-decoration-none text-muted" th:href="@{|/users/${user.username}|}">
+
+
+                        <div class="header" data-header th:text="${user.firstName}+' '+${user.lastName}">
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-middle">
+            <a th:href="@{/feed}">
+                <i class="fa fa-home"></i>
+                <a href="#" class="active">
+                    <i class="fa fa-user-friends"></i>
+                </a>
+            </a>
+
+            <a th:href="@{|/users/${#authentication.principal.username}|}" >
+                <i class="fa fa-users"></i>
+            </a>
+            <a th:href="@{/msg/chat}">
+                <i class="	fas fa-comment-alt"></i>
+            </a>
+        </div>
+
+        <div class="nav-right">
+            <span class="profile"></span>
+
+            <a href="#">
+                <i class="fa fa-bell"></i>
+            </a>
+
+        </div>
+    </nav>
+</head>
+<link rel="stylesheet" href="/friend-list.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<div class="main-content">
+<ul id='friend-list' th:each="friend : ${user.getSentRequest()}">
+    <li class='friend selected'>
+        <img th:src="@{|/images/${friend.getReceiver().getImages().get(0).getId()}|}" />
+        <a th:href="@{|/users/${friend.getReceiver().getUsername()}|}" style="text-decoration: #0e0e0e; color: #0e0e0e">
+            <div class='name' th:text="${friend.getReceiver().getFirstName() + ' ' + friend.getReceiver().getLastName()}">
+        </div>
+        </a>
+    </li>
+<!--    <li class='friend'>-->
+<!--        <img src='https://i.imgur.com/0I4lkh9.jpg' />-->
+<!--        <div class='name'>-->
+<!--            Leah Slaten-->
+<!--        </div>-->
+<!--    </li>-->
+<!--    <li class='friend'>-->
+<!--        <img src='https://i.imgur.com/s2WCwH2.jpg' />-->
+<!--        <div class='name'>-->
+<!--            Mario Martinez-->
+<!--        </div>-->
+<!--    </li>-->
+<!--    <li class='friend'>-->
+<!--        <img src='https://i.imgur.com/rxBwsBB.jpg' />-->
+<!--        <div class='name'>-->
+<!--            Cynthia Lo-->
+<!--        </div>-->
+<!--    </li>-->
+<!--    <li class='friend'>-->
+<!--        <img src='https://i.imgur.com/tovkOg2.jpg' />-->
+<!--        <div class='name'>-->
+<!--            Sally Lin-->
+<!--        </div>-->
+<!--    </li>-->
+<!--    <li class='friend'>-->
+<!--        <img src='https://i.imgur.com/A7lNstm.jpg' />-->
+<!--        <div class='name'>-->
+<!--            Danny Tang-->
+<!--        </div>-->
+<!--    </li>-->
+</ul>
+</div>
+</html>

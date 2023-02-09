@@ -77,7 +77,7 @@ public class MainView extends VerticalLayout {
                 new HorizontalLayout() {{
                     add(
                             field,
-                            new Button("➡") {{
+                            new Button("🏳‍🌈") {{
                                 addClickListener(click -> {
                                     storage.addRecord(user, field.getValue());
                                     field.clear();

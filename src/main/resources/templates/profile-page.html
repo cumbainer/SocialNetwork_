@@ -22,7 +22,7 @@
     <div class="nav-middle">
         <a th:href="@{/feed}">
             <i class="fa fa-home"></i>
-            <a href="#">
+            <a th:href="@{|/users/${#authentication.principal.username}/friends|}">
                 <i class="fa fa-user-friends"></i>
             </a>
         </a>
@@ -108,6 +108,17 @@
                     <a href="#">Privacy</a> <a href="#">Terms</a> <a href="#">Advertising</a> <a href="#">Ad Choices</a> <a href="#">Cookies</a> <span id="t-more">More<i class="material-icons">arrow_drop_down</i></span>
                 </div>
             </div>
+
+            <div th:each="friend : ${user.getSentRequest()}">
+                <p th:text="${'sender username:  ' + friend.getSender().username}"></p>
+                <p th:text="${'receiver username:  ' + friend.getReceiver().username}"></p>
+
+            </div>
+            <div th:each="friend : ${user.getReceivedRequests()}">
+                <p th:text="${'sender username:  ' + friend.getSender().username}"></p>
+                <p th:text="${'receiver username:  ' + friend.getReceiver().username}"></p>
+
+            </div>
             <div class="td" id="m-col">
                 <div>
                     <div class="post" th:each="post, iter : ${posts}">
@@ -140,6 +151,8 @@
                         </div>
 
 
+
+
                         <div class="post-bottom">
 
                             <button class="like__btn">
@@ -163,6 +176,7 @@
                     </div>
                 </div>
             </div>
+
 
 
 
