@@ -11,9 +11,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.exception.UserAlreadyExistsException;
 import ua.socialnetwork.security.SecurityUser;
+import ua.socialnetwork.service.FriendService;
 import ua.socialnetwork.service.UserService;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.service.PostService;
@@ -28,6 +30,7 @@ import java.util.List;
 public class UserController {
     private UserService userService;
     private PostService postService;
+    private FriendService friendService;
 
     @GetMapping("/create")
      public String create(Model model){
@@ -122,14 +125,27 @@ public class UserController {
         List<Post> posts = postService.getPostsByUser_Username(username);
 
         boolean ifImageIsPresent = false;
+        boolean ifFriend = false;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser u = (SecurityUser) authentication.getPrincipal();
+
+        Friend f = friendService.getFriendByReceiverUsername(username, u.getUsername());
 
         if(u.getImages().size() > 0){
             ifImageIsPresent = true;
         }
 
+        if(f != null){
+            ifFriend = true;
+        }
+
+        if(u.getReceivedRequests().contains(f)){
+            ifFriend = true;
+        }
+
+        model.addAttribute("friendInfo", f);
+        model.addAttribute("ifFriend", ifFriend);
         model.addAttribute("imageIsPresent", ifImageIsPresent);
         model.addAttribute("posts", posts);
 
@@ -161,6 +177,13 @@ public class UserController {
 
         model.addAttribute("size", user.getImages().size());
         return "friend-list";
+    }
+
+
+    @GetMapping("/{user_id}/delete")
+    public String deleteUser(@PathVariable("user_id") Integer id){
+        userService.delete(id);
+        return "redirect:/feed";
     }
 
 

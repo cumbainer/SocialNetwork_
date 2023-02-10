@@ -49,6 +49,8 @@
 
     <link rel="stylesheet" href="/profile-page.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <div th:text="${'ifFriend: ' + ifFriend}"></div>
+    <div th:text="${'isFriendTwo: ' + isFriendTwo}"></div>
 
 
 <!--    Todo Refactor here-->
@@ -79,14 +81,15 @@
     <div id="main-content">
         <div class="tb">
             <div class="td" id="l-col">
-<!--                Make this button invisible if we are on own page-->
-                    <button class="button-44" role="button"><a th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
+                    <button  th:if="${!ifFriend}" class="button-44" role="button" ><a style="text-decoration: none; color: white" th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
+                    <button  th:if="${ifFriend}" class="button-44" role="button" style="color: #7f8fa6;" disabled>A friend</button>
                     <button class="button-44" role="button">Write Msg</button>
                 <br><br>
                     <div>
                         <button class="button-44" role="button">Follow</button>
                         <button class="button-44" role="button"><a th:href="@{|/users/update/${user.getId()}|}">Update user</a></button>
                     </div>
+
 
 
                <p th:text="${user.getEmail()}"></p>
@@ -99,7 +102,6 @@
                         <span th:text="${user.getBio()}"></span>
                     </div>
                     <div id="i-box">
-<!--                        <div id="intro-line">Front-end Enginee/r</div>-->
                         <div id="u-occ"></div>
                     </div>
                 </div>
@@ -108,19 +110,8 @@
                     <a href="#">Privacy</a> <a href="#">Terms</a> <a href="#">Advertising</a> <a href="#">Ad Choices</a> <a href="#">Cookies</a> <span id="t-more">More<i class="material-icons">arrow_drop_down</i></span>
                 </div>
             </div>
-
-            <div th:each="friend : ${user.getSentRequest()}">
-                <p th:text="${'sender username:  ' + friend.getSender().username}"></p>
-                <p th:text="${'receiver username:  ' + friend.getReceiver().username}"></p>
-
-            </div>
-            <div th:each="friend : ${user.getReceivedRequests()}">
-                <p th:text="${'sender username:  ' + friend.getSender().username}"></p>
-                <p th:text="${'receiver username:  ' + friend.getReceiver().username}"></p>
-
-            </div>
             <div class="td" id="m-col">
-                <div>
+
                     <div class="post" th:each="post, iter : ${posts}">
                         <div class="post-top">
                             <div class="dp">
@@ -150,9 +141,6 @@
 
                         </div>
 
-
-
-
                         <div class="post-bottom">
 
                             <button class="like__btn">
@@ -178,14 +166,9 @@
             </div>
 
 
-
-
-
-
         </div>
     </div>
 
-<!--    <img th:src="@{|/images/${imageBackground.getId()}|}" alt="">-->
 
 
     <script src="https://use.fontawesome.com/fe459689b4.js"></script>

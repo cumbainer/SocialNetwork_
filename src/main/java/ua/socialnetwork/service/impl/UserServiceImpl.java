@@ -139,8 +139,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User delete(int id) {
-        return null;
+    public void delete(int id) {
+        User user = readById(id);
+        if(id != 0){
+            userRepo.delete(user);
+            log.info("An user with id: " + user.getId() + " was deleted in UserServiceImpl");
+
+        }
     }
 
     @Override
@@ -153,7 +158,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User readByUsername(String username) {
         return userRepo.findUserByUsername(username).orElseThrow(() ->
-                new EntityNotFoundException("User with id: " + username + "not found"));
+                new EntityNotFoundException("User with username: " + username + "not found"));
     }
 
     @Override
@@ -161,12 +166,7 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll();
     }
 
-    @Override
-    public User addFriend(int id) {
-        User receiver = readById(id);
 
-        return null;
-    }
 
 
     private boolean ifUsernameExists(String username){

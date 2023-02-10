@@ -28,6 +28,10 @@ public class Friend {
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
+//    @ManyToOne
+//    @JoinColumn(name = "receiver_id")
+//    private User ;
+
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private FriendStatus status;

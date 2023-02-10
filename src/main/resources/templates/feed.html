@@ -58,7 +58,7 @@
     <div class="nav-right">
         <span class="profile"></span>
 
-        <a >
+        <a th:href="@{/friend/notification}">
             <i class="fa fa-bell"></i>
         </a>
 
@@ -76,8 +76,8 @@
 <!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ></a>-->
 <!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img   src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>-->
 
-                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ><img th:if="${ifImageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
-                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${ifImageIsPresent == false}" class="button-profile" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>
+                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ><img th:if="${imageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
+                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${imageIsPresent == false}" class="button-profile" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>
 
                 </div>
                 <p th:href="@{|/users/${#authentication.principal.username}|}" th:text="${#authentication.principal.fullName}"></p>
@@ -141,8 +141,8 @@
             <div class="post create">
                 <div class="post-top">
                     <div class="dp">
-                        <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" >
-                        <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
+                        <img th:if="${imageIsPresent == true}" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" >
+                        <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
                     </div>
                     <input type="text" th:placeholder="${'What is on your mind, ' + #authentication.principal.firstName + '?' }"
                         th:field="*{body}"/>
@@ -170,8 +170,12 @@
             <div class="post-top">
                 <div class="dp">
 <!--                    TODO add perevirku-->
-                        <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >
-                        <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
+<!--                        <img th:if="${imageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >-->
+<!--                        <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >-->
+                    <img th:if="${imageIsPresent == false and post.user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                    <img th:if="${imageIsPresent == true and post.user.images.size()  ==  1 or post.user.images.size()  ==  2 }" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
+                    <img th:if="${imageIsPresent == true and post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
+
 <!--                    </a>-->
                 </div>
                 <div class="post-info" >

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.repo.FriendRepo;
-import ua.socialnetwork.repo.UserRepo;
 import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.FriendService;
 import ua.socialnetwork.service.UserService;
@@ -22,18 +21,18 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public Friend create(Friend friend, int senderId, int receiverId) {
         //Todo think of is later
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser u = (SecurityUser) authentication.getPrincipal();
-
-
-
 
         User receiver = userService.readById(receiverId);
         User sender = userService.readById(senderId);
 
+
+
         receiver.getReceivedRequests().add(friend);
         sender.getSentRequest().add(friend);
+
+
 
         return friendRepo.save(friend);
 
@@ -46,4 +45,10 @@ public class FriendServiceImpl implements FriendService {
         friendRepo.delete(friend);
 
     }
+    @Override
+    public Friend getFriendByReceiverUsername(String receiverUsername, String senderUsername ) {
+        return friendRepo.findFriendByReceiver_UsernameAndSender_Username(receiverUsername,senderUsername );
+    }
+
+
 }

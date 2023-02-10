@@ -75,12 +75,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "sender")
+    @OneToMany(mappedBy = "sender", fetch = FetchType.EAGER)
     private Set<Friend> sentRequest;
 
-    @OneToMany(mappedBy = "receiver")
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER)
     private Set<Friend> receivedRequests;
-
 
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,

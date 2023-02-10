@@ -2,6 +2,8 @@ package ua.socialnetwork.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
+import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.FriendService;
 import ua.socialnetwork.service.UserService;
 
 import java.util.List;
+import java.util.Set;
 
 
 @AllArgsConstructor
@@ -50,6 +54,30 @@ public class FriendController {
 
         return "redirect:/feed";
     }
+
+    @GetMapping("/notification")
+    public String getNotification(Model model){
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityUser u = (SecurityUser) authentication.getPrincipal();
+
+        Set<Friend> receivedRequests = u.getReceivedRequests();
+        model.addAttribute("requests", receivedRequests);
+
+
+        return "notifications";
+    }
+
+//    @GetMapping("/accept")
+//    public String acceptRequest(){
+//
+//
+//
+//
+//        return
+//    }
+
+
 
 
 

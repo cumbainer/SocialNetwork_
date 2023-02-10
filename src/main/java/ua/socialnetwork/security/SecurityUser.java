@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.UserImage;
 
@@ -74,8 +75,6 @@ public class SecurityUser implements UserDetails {
         return user.getImages().get(0).getId();
     }
 
-
-
     public int getImageForFeed(){
         List<UserImage> out = user.getImages();
 
@@ -83,7 +82,13 @@ public class SecurityUser implements UserDetails {
             return out.get(0).getId();
         }
         return out.get(user.getImages().size() -1).getId();
+    }
 
 
+    public Set<Friend> getReceivedRequests(){
+        return user.getReceivedRequests();
+    }
+    public Set<Friend> getSentRequest() {
+        return user.getSentRequest();
     }
 }
