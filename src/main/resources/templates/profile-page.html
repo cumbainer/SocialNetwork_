@@ -49,8 +49,6 @@
 
     <link rel="stylesheet" href="/profile-page.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <div th:text="${'ifFriend: ' + ifFriend}"></div>
-    <div th:text="${'isFriendTwo: ' + isFriendTwo}"></div>
 
 
 <!--    Todo Refactor here-->
@@ -81,13 +79,14 @@
     <div id="main-content">
         <div class="tb">
             <div class="td" id="l-col">
-                    <button  th:if="${!ifFriend}" class="button-44" role="button" ><a style="text-decoration: none; color: white" th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
-                    <button  th:if="${ifFriend}" class="button-44" role="button" style="color: #7f8fa6;" disabled>A friend</button>
+                    <button  th:if="${!ifFriend and !isAccount }" class="button-44" role="button" ><a style="text-decoration: none; color: white" th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
+                    <button  th:if="${ifFriend and !isAccount}" class="button-44" role="button" style="color: white; background: #7f8fa6" disabled>A friend</button>
+<!--                    <button  th:if="${isAccount}" class="button-44" role="button" style="color: white; background: #7f8fa6" disabled>GET THE FUCK OUT OF HERE</button>-->
                     <button class="button-44" role="button">Write Msg</button>
                 <br><br>
                     <div>
                         <button class="button-44" role="button">Follow</button>
-                        <button class="button-44" role="button"><a th:href="@{|/users/update/${user.getId()}|}">Update user</a></button>
+                        <button class="button-44" role="button"><a th:href="@{|/users/update/${user.getId()}|}" style="color: white; text-decoration: none">Update user</a></button>
                     </div>
 
 

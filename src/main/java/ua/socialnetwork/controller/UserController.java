@@ -126,6 +126,7 @@ public class UserController {
 
         boolean ifImageIsPresent = false;
         boolean ifFriend = false;
+        boolean isAccount = false;
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser u = (SecurityUser) authentication.getPrincipal();
@@ -143,9 +144,13 @@ public class UserController {
         if(u.getReceivedRequests().contains(f)){
             ifFriend = true;
         }
+        if(u.getUsername().equals(username)){
+            isAccount = true;
+        }
 
-        model.addAttribute("friendInfo", f);
+
         model.addAttribute("ifFriend", ifFriend);
+        model.addAttribute("isAccount", isAccount);
         model.addAttribute("imageIsPresent", ifImageIsPresent);
         model.addAttribute("posts", posts);
 
