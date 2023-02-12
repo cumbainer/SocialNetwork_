@@ -169,20 +169,15 @@
         <div class="post" th:each="post, iter : ${posts}">
             <div class="post-top">
                 <div class="dp">
-<!--                    TODO add perevirku-->
-<!--                        <img th:if="${imageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >-->
-<!--                        <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >-->
-                    <img th:if="${imageIsPresent == false and post.user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                    <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
                     <img th:if="${imageIsPresent == true and post.user.images.size()  ==  1 or post.user.images.size()  ==  2 }" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
                     <img th:if="${imageIsPresent == true and post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
 
-<!--                    </a>-->
                 </div>
                 <div class="post-info" >
                     <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}" style="text-decoration: #0e0e0e; color: #0e0e0e">
                         <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
                     </a>
-<!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
                     <span class="time" th:text="${post.getCreationDate()}" style = "position:relative; top: -20px;" ></span>
 
                 </div>
@@ -302,9 +297,16 @@
 
 
 
+
 </div>
 
+
 <script>
+
+
+
+
+
     const searchInput = document.querySelector("[data-search]")
 
     let users = []
@@ -336,5 +338,8 @@
 
 
 </body>
+<footer>
+    <div th:replace="footer"></div>
+</footer>
 
 </html>

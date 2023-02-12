@@ -21,11 +21,15 @@ import java.time.LocalDateTime;
 @Controller
 @RequestMapping({"/posts", "/"})
 @Slf4j
-@AllArgsConstructor
 public class PostController {
     private final UserService userService;
     private final PostService postService;
 
+
+    public PostController(UserService userService, PostService postService) {
+        this.userService = userService;
+        this.postService = postService;
+    }
 
     @GetMapping("/feed")
     public String getAll(Model model){
@@ -37,11 +41,6 @@ public class PostController {
         if(u.getImages().size() > 0){
             ifImageIsPresent = true;
         }
-
-
-
-
-
 
         model.addAttribute("imageIsPresent", ifImageIsPresent);
         model.addAttribute("posts", postService.getAll());
@@ -95,9 +94,7 @@ public class PostController {
 
         String username = u.getUsername();
 
-
         postService.delete(post_id);
-
 
         return "redirect:/users/"+username;
     }

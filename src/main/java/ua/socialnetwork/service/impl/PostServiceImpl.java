@@ -14,6 +14,7 @@ import ua.socialnetwork.repo.PostRepo;
 import ua.socialnetwork.service.PostService;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,15 +22,10 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
-
     private PostRepo postRepo;
 
     @Override
     public Post create(Post post) {
-        //TODO make validations and exc handler
-//        log.info("A post " + post.toString() + " was created in PostServiceImpl");
-
-//        post.setCreationDate(LocalDateTime.now());
         return postRepo.save(post);
     }
     @Override
@@ -41,16 +37,10 @@ public class PostServiceImpl implements PostService {
             post.setImageToPost(image);
         }
 
-        //TODO make validations and exc handler
         log.info("A post " + post.toString() + " was created in PostServiceImpl");
 
         post.setCreationDate(LocalDateTime.now());
         return postRepo.save(post);
-    }
-
-    @Override
-    public Post update(Post post) {
-        return null;
     }
 
     @Override
@@ -62,12 +52,9 @@ public class PostServiceImpl implements PostService {
             post.setImageToPost(image);
         }
 
-
-
         post.setEditionDate(LocalDateTime.now());
         return postRepo.save(post);
     }
-
 
     @Override
     public Post readById(int id) {
@@ -81,41 +68,36 @@ public class PostServiceImpl implements PostService {
         postRepo.delete(readById(id));
         log.info("A post with id" + id+ "has been deleted");
         }
-
         log.error("An error occurred in Post Controller, id " + id );
     }
 
-
     @Override
     public List<Post> getAll() {
-        //ToDO add validation and stuff later
-
-
         return postRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     @Override
-    public List<Post> getByUserId(int userId) {
-        return null;
-    }
-
-    @Override
     public List<Post> getPostsByUser_Username(String username){
-        List<Post> posts = postRepo.getPostsByUser_Username(username, Sort.by(Sort.Direction.DESC, "id"));
-        return posts;
-
+        return postRepo.getPostsByUser_Username(username, Sort.by(Sort.Direction.DESC, "id"));
     }
 
-    @SneakyThrows
+
     private PostImage toImageEntity(MultipartFile postImage) {
         PostImage image = new PostImage();
         image.setName(postImage.getName());
         image.setOriginalFileName(postImage.getOriginalFilename());
         image.setContentType(postImage.getContentType());
         image.setSize(postImage.getSize());
-        image.setBytes(postImage.getBytes());
+        try{
+            image.setBytes(postImage.getBytes());
+
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
+
         return image;
     }
+    //Needed to put like/dislike on a post
     public void makeReaction(Post post, PostAction action){
         int likeCounter = post.getLikeCounter();
         int dislikeCounter = post.getDislikeCounter();
@@ -148,4 +130,5 @@ public class PostServiceImpl implements PostService {
         }
 
     }
+
 }

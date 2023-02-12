@@ -4,6 +4,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,10 +15,11 @@ import ua.socialnetwork.entity.User;
 import ua.socialnetwork.exception.NullEntityReferenceException;
 import ua.socialnetwork.exception.UserAlreadyExistsException;
 import ua.socialnetwork.repo.UserRepo;
+import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.UserService;
 
 
-
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -64,9 +68,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user, MultipartFile userImage, MultipartFile imageBackground) {
-
         UserImage image;
         UserImage image2;
+
         if(ifUsernameExists(user.getUsername())){
 
             throw new UserAlreadyExistsException("There already is an account with username: " + user.getUsername());
@@ -87,8 +91,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setCreationDate(LocalDateTime.now());
         return userRepo.save(user);
-
-
     }
 
     //ToDO make 1 method to not duplicate code
@@ -109,7 +111,6 @@ public class UserServiceImpl implements UserService {
 
         }
         throw new NullEntityReferenceException("User can not be null");
-
     }
     @Override
     public User update(User user, MultipartFile userImage, MultipartFile imageBackground) {
@@ -132,10 +133,8 @@ public class UserServiceImpl implements UserService {
             user.setPassword(encoder.encode(user.getPassword()));
             user.setCreationDate(LocalDateTime.now());
             return userRepo.save(user);
-
         }
         throw new NullEntityReferenceException("User can not be null");
-
     }
 
     @Override
@@ -144,13 +143,11 @@ public class UserServiceImpl implements UserService {
         if(id != 0){
             userRepo.delete(user);
             log.info("An user with id: " + user.getId() + " was deleted in UserServiceImpl");
-
         }
     }
 
     @Override
     public User readById(int id) {
-
         return userRepo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("User with id: " + id + "not found"));
     }
@@ -166,29 +163,31 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll();
     }
 
+    @Override
 
-
+    public SecurityUser getSecurityUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return (SecurityUser) authentication.getPrincipal();
+    }
 
     private boolean ifUsernameExists(String username){
         Optional<User> user = userRepo.findUserByUsername(username);
-
 
         User ifUser = user.orElse(null);
         return ifUser != null;
     }
 
-    @SneakyThrows
     private UserImage toImageEntity(MultipartFile userImage) {
         UserImage image = new UserImage();
         image.setName(userImage.getName());
         image.setOriginalFileName(userImage.getOriginalFilename());
         image.setContentType(userImage.getContentType());
         image.setSize(userImage.getSize());
-        image.setBytes(userImage.getBytes());
+        try {
+            image.setBytes(userImage.getBytes());
+        }catch (IOException ex){
+            ex.printStackTrace();
+        }
         return image;
     }
-
-
-
-
 }

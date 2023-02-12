@@ -20,17 +20,18 @@ import ua.socialnetwork.service.UserService;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.service.PostService;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
 @RequestMapping("/users")
-@AllArgsConstructor
 @Slf4j
+@AllArgsConstructor
 public class UserController {
-    private UserService userService;
-    private PostService postService;
-    private FriendService friendService;
+    private final UserService userService;
+    private final PostService postService;
+    private final FriendService friendService;
 
     @GetMapping("/create")
      public String create(Model model){
@@ -108,7 +109,6 @@ public class UserController {
         user.setUsername(oldUser.getUsername());
         user.setEmail(oldUser.getEmail());
 
-
         userService.update(user, userImage, imageBackground);
 
         return "redirect:/login";
@@ -124,12 +124,12 @@ public class UserController {
         User user = userService.readByUsername(username);
         List<Post> posts = postService.getPostsByUser_Username(username);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        SecurityUser u = (SecurityUser) authentication.getPrincipal();
+
         boolean ifImageIsPresent = false;
         boolean ifFriend = false;
         boolean isAccount = false;
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
         Friend f = friendService.getFriendByReceiverUsername(username, u.getUsername());
 
@@ -147,7 +147,6 @@ public class UserController {
         if(u.getUsername().equals(username)){
             isAccount = true;
         }
-
 
         model.addAttribute("ifFriend", ifFriend);
         model.addAttribute("isAccount", isAccount);
@@ -184,12 +183,10 @@ public class UserController {
         return "friend-list";
     }
 
-
     @GetMapping("/{user_id}/delete")
     public String deleteUser(@PathVariable("user_id") Integer id){
         userService.delete(id);
         return "redirect:/feed";
     }
-
 
 }

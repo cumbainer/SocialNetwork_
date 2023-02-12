@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.A;
 import ua.socialnetwork.entity.enums.FriendStatus;
 
 import java.time.LocalDateTime;
@@ -14,23 +15,19 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "friend")
+@Table(name = "friends")
 public class Friend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "sender_id")
     private User sender;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "receiver_id")
     private User receiver;
-
-//    @ManyToOne
-//    @JoinColumn(name = "receiver_id")
-//    private User ;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -39,10 +36,5 @@ public class Friend {
     @Column(name = "sendingRequestDate")
     private LocalDateTime sendingRequestDate;
 
-    @Column(name = "acceptingRequestDate")
-    private LocalDateTime acceptingRequestDate;
-
-    @Column(name = "decliningRequestDate")
-    private LocalDateTime decliningRequestDate;
 
 }

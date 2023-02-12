@@ -3,9 +3,11 @@ package ua.socialnetwork.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.UserImage;
@@ -91,4 +93,5 @@ public class SecurityUser implements UserDetails {
     public Set<Friend> getSentRequest() {
         return user.getSentRequest();
     }
+
 }
