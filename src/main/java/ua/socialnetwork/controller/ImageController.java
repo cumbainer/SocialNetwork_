@@ -18,8 +18,6 @@ import java.io.ByteArrayInputStream;
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
-
-    //ToDo besides profile image add background image
     private final UserImageRepo userImageRepo;
     private final PostImageRepo postImageRepo;
 
@@ -36,8 +34,6 @@ public class ImageController {
         PostImage image =  postImageRepo.findById(id).orElse(null);
 
         return ResponseEntity.ok().header("postFileName", image.getOriginalFileName()).contentType(MediaType.valueOf(image.getContentType())).contentLength(image.getSize()).body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
-
-
     }
 
 

@@ -38,13 +38,19 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void removeFromFriends(int friendEntityId) {
-        Friend friend = friendRepo.findById(friendEntityId).orElseThrow(
-                () -> new NoSuchElementException("\"Caught an NoSuchElementException exception while deleting friend with id: \" + friendEntityId"));
+//        Friend friend = friendRepo.findById(friendEntityId).orElseThrow(
+//                () -> new NoSuchElementException("\"Caught an NoSuchElementException exception while deleting friend with id: \" + friendEntityId"));
+        Friend friend = getById(friendEntityId);
         friendRepo.delete(friend);
     }
 
     @Override
     public Friend getFriendByReceiverUsername(String receiverUsername, String senderUsername) {
         return friendRepo.findFriendByReceiver_UsernameAndSender_Username(receiverUsername, senderUsername);
+    }
+
+    public Friend getById(int friendId ){
+        return friendRepo.findById(friendId).orElseThrow(
+                () -> new NoSuchElementException("\"Caught an NoSuchElementException exception while deleting friend with id: \" + friendEntityId"));
     }
 }

@@ -56,10 +56,11 @@
         <div>
             <li class='friend selected' th:each="friend : ${user.getReceivedRequests()}">
 
-                <img th:if="${friend.getSender().getImages().size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" />
-                <img th:if="${friend.getSender().getImages().size() >= 3}" th:src="@{|/images/${friend.getSender().getImages().get(0).getId()}|}" />
-                <img th:if="${friend.getSender().getImages().size() == 1 || friend.getSender().getImages().size() == 2}" th:src="@{|/images/${friend.getSender().getImages().get(friend.getSender().getImages().size() -1).getId()}|}"/>
-
+                <img th:if="${friend.sender.images.size() == 1 and friend.sender.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${friend.sender.images.get(0).getId()}|}">
+                <img th:if="${friend.sender.images.size() == 2 and friend.sender.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${friend.sender.images.get(1).getId()}|}">
+                <img th:if="${friend.sender.images.size() == 2}" th:src="@{|/images/${friend.sender.images.get(1).getId()}|}">
+                <img th:if="${friend.sender.images.size()  >=  3 }" th:src="@{|/images/${friend.sender.images.get(friend.sender.images.size() - 1).getId()}|}">
+                <img th:if="${friend.sender.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
                 <a th:href="@{|/users/${friend.getSender().getUsername()}|}" style="text-decoration: #0e0e0e; color: #0e0e0e">
                     <div class='name' th:text="${friend.getSender().getFirstName() + ' ' + friend.getSender().getLastName()}"></div>
                 </a>
@@ -67,9 +68,12 @@
 
             </li>
             <li class='friend selected' th:each="friend : ${user.getSentRequest()}">
-                <img th:if="${friend.getReceiver().getImages().size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" />
-                <img th:if="${friend.getReceiver().getImages().size() >= 3}" th:src="@{|/images/${friend.getReceiver().getImages().get(0).getId()}|}" />
-                <img th:if="${friend.getReceiver().getImages().size() == 1 || friend.getReceiver().getImages().size() == 2}" th:src="@{|/images/${friend.getReceiver().getImages().get(friend.getReceiver().getImages().size() -1).getId()}|}"/>
+
+                <img th:if="${friend.receiver.images.size() == 1 and friend.receiver.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${friend.receiver.images.get(0).getId()}|}">
+                <img th:if="${friend.receiver.images.size() == 2 and friend.receiver.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${friend.receiver.images.get(1).getId()}|}">
+                <img th:if="${friend.receiver.images.size() == 2}" th:src="@{|/images/${friend.receiver.images.get(1).getId()}|}">
+                <img th:if="${friend.receiver.images.size()  >=  3 }" th:src="@{|/images/${friend.receiver.images.get(friend.receiver.images.size() - 1).getId()}|}">
+                <img th:if="${friend.receiver.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
 
                 <a th:href="@{|/users/${friend.getReceiver().getUsername()}|}" style="text-decoration: #0e0e0e; color: #0e0e0e">
                     <div class='name' th:text="${friend.getReceiver().getFirstName() + ' ' + friend.getReceiver().getLastName()}"></div>
@@ -80,8 +84,8 @@
     </ul>
     </div>
 </body>
-<footer>
-    <div th:replace="footer"></div>
-</footer>
+<!--<footer>-->
+<!--    <div th:replace="footer"></div>-->
+<!--</footer>-->
 </html>
 

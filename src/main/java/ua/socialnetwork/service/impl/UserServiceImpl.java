@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.socialnetwork.entity.UserImage;
 import ua.socialnetwork.entity.User;
+import ua.socialnetwork.entity.enums.UserRole;
 import ua.socialnetwork.exception.NullEntityReferenceException;
 import ua.socialnetwork.exception.UserAlreadyExistsException;
 import ua.socialnetwork.repo.UserRepo;
@@ -43,6 +44,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setCreationDate(LocalDateTime.now());
+        user.setRole(UserRole.USER);
         return userRepo.save(user);
     }
 
@@ -61,6 +63,7 @@ public class UserServiceImpl implements UserService {
         log.info("Added image: " + userImage.getName());
 
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(UserRole.USER);
         user.setCreationDate(LocalDateTime.now());
         return userRepo.save(user);
 
@@ -89,6 +92,7 @@ public class UserServiceImpl implements UserService {
         log.info("Added background image: " + imageBackground.getName());
 
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(UserRole.USER);
         user.setCreationDate(LocalDateTime.now());
         return userRepo.save(user);
     }
@@ -105,8 +109,9 @@ public class UserServiceImpl implements UserService {
                 user.setBackgroundImageToUser(image);
             }
 
+            user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
-            user.setCreationDate(LocalDateTime.now());
+            user.setEditionDate(LocalDateTime.now());
             return userRepo.save(user);
 
         }
@@ -130,8 +135,9 @@ public class UserServiceImpl implements UserService {
             log.info("Added image: " + userImage.getName());
             log.info("Added background image: " + imageBackground.getName());
 
+            user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
-            user.setCreationDate(LocalDateTime.now());
+            user.setEditionDate(LocalDateTime.now());
             return userRepo.save(user);
         }
         throw new NullEntityReferenceException("User can not be null");

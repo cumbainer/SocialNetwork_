@@ -76,16 +76,29 @@ public class SecurityUser implements UserDetails {
     public int getImage() {
         return user.getImages().get(0).getId();
     }
+    public int getId(){
+        return user.getId();
+    }
 
+    //todo refactor
     public int getImageForFeed(){
         List<UserImage> out = user.getImages();
 
-        if(out.size() == 1 || out.size() == 2 ){
+        if(out.size()==1 && out.get(0).getName().equals("userImage")){
             return out.get(0).getId();
         }
-        return out.get(user.getImages().size() -1).getId();
-    }
+        if(out.size() == 2 && out.get(0).getName().equals("backgroundImage")){
+            return out.get(1).getId();
+        }
+        if(out.size() == 2){
+            return out.get(1).getId();
+        }
+        if(out.size() >= 3){
+            return out.get(user.getImages().size() -1).getId();
+        }
+        return -1;
 
+    }
 
     public Set<Friend> getReceivedRequests(){
         return user.getReceivedRequests();

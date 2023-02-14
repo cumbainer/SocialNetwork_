@@ -24,7 +24,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/users/create").permitAll()
-                .requestMatchers("/feed").permitAll()
                 .requestMatchers("/users/create/continue/**").permitAll()
                 .and()
 

@@ -3,6 +3,7 @@ package ua.socialnetwork.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,17 +20,12 @@ import ua.socialnetwork.service.UserService;
 import java.time.LocalDateTime;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping({"/posts", "/"})
 @Slf4j
 public class PostController {
     private final UserService userService;
     private final PostService postService;
-
-
-    public PostController(UserService userService, PostService postService) {
-        this.userService = userService;
-        this.postService = postService;
-    }
 
     @GetMapping("/feed")
     public String getAll(Model model){
@@ -46,33 +42,34 @@ public class PostController {
         model.addAttribute("posts", postService.getAll());
         model.addAttribute("newPost", new Post());
         model.addAttribute("users", userService.getAll());
-
         model.addAttribute("auth", authentication);
 
         return "feed";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIM') or #post.user.id = authentication.principal.id")
     @PostMapping("/new/{username}")
     public String create(@PathVariable("username") String username, Post post,
-                            @RequestParam(value = "postImage", required = false) MultipartFile postImage, BindingResult result){
+                            @RequestParam(value = "postImage",required = false) MultipartFile postImage, BindingResult result){
         post.setUser(userService.readByUsername(username));
 
         postService.create(post, postImage);
-        log.info("From PostController a Post has been created, id: " + post.getId());
         return "redirect:/feed";
     }
 
-
-    @GetMapping("/update/{post_id}")
-    public String editForm(@PathVariable("post_id") Integer id, Model model){
-        Post post = postService.readById(id);
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @postServiceImpl.readById(#postId).user.id")
+    @GetMapping("/{post_id}/update/")
+    public String editForm(@PathVariable("post_id") Integer postId, Model model){
+        Post post = postService.readById(postId);
 
         model.addAttribute("post", post);
 
         return "update-post";
     }
 
-    @PostMapping("/update")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id = @postServiceImpl.readById(#post.id).user.id")
+    @PreAuthorize("hasRole('ROLE_ADMIM') or #post.user.id == authentication.principal.id")
+    @PostMapping("/update/")
     public String edit(Post post, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage ){
 
         if(result.hasErrors()){
@@ -87,45 +84,38 @@ public class PostController {
 
         return "redirect:/feed";
     }
-    @GetMapping("/delete/{post_id}")
-    public String delete(@PathVariable("post_id") Integer post_id){
+    @PreAuthorize("hasRole('ROLE_ADMIM') or #postId == authentication.principal.id")
+    @GetMapping("/{post_id}/delete/")
+    public String delete(@PathVariable("post_id") Integer postId){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
         String username = u.getUsername();
 
-        postService.delete(post_id);
+        postService.delete(postId);
 
         return "redirect:/users/"+username;
     }
 
-
-
-    @GetMapping("/like/{post_id}")
+    @GetMapping("/{post_id}/like/")
     public String like(@PathVariable("post_id") Integer post_id, Model model){
 
-        //TODO fix likeCounter (attach to a post , the bug is each every post gets all previous post likes)
         Post post = postService.readById(post_id);
 
         postService.makeReaction(post, PostAction.LIKE);
-
 
         postService.create(post);
         return "redirect:/feed";
     }
 
-
-
-    @GetMapping("/dislike/{post_id}")
+    @GetMapping("/{post_id}/dislike/")
     public String dislike(@PathVariable("post_id") Integer post_id, Model model){
 
-        //TODO fix likeCounter (attach to a post , the bug is each every post gets all previous post likes)
         Post post = postService.readById(post_id);
 
         postService.makeReaction(post, PostAction.DISLIKE);
         postService.create(post);
         return "redirect:/feed";
     }
-
 
 }

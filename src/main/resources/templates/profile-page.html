@@ -55,31 +55,30 @@
     <div id="profile-upper">
         <div id="profile-banner-image">
             <img th:if="${user.images.size() >= 2 and user.images.get(1).getName() == 'userImage'}" src="https://wallpapers.com/images/hd/hd-country-life-at-night-vvxmbqzkr4uumuni.jpg">
-            <img th:if="${imageIsPresent == true and user.images.size() >= 2 and user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${image.get(1).getId()}|}">
+            <img th:if="${user.images.size() >= 2 and user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${image.get(1).getId()}|}">
             <img th:if="${user.images.size() == 1 || user.images.size() == 0 }" src="https://wallpapers.com/images/hd/hd-country-life-at-night-vvxmbqzkr4uumuni.jpg">
         </div>
 
         <div id="profile-d" >
+
             <div id="profile-pic" >
-
-                <img th:if="${imageIsPresent == false and user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
-                <img th:if="${user.images.size()  <=  2 and user.images.size()  >  0 }" th:src="@{|/images/${image.get(0).getId()}|}">
+                <img th:if="${user.images.size() == 1 and user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${image.get(0).getId()}|}">
+                <img th:if="${user.images.size() == 2 and user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${image.get(1).getId()}|}">
+                <img th:if="${user.images.size() == 2}" th:src="@{|/images/${image.get(1).getId()}|}">
                 <img th:if="${user.images.size()  >=  3 }" th:src="@{|/images/${image.get(image.size() - 1).getId()}|}">
-
+                <img th:if="${user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
             </div>
+
 <!--            ToDo add if image is not present -> add custom image, like 'unavailable"-->
             <div id="u-name" th:text="${user.getFirstName() + ' '+ user.getLastName()}"></div>
-
         </div>
-
-
 
         <div id="black-grd"></div>
 
     </div>
     <div id="main-content">
-        <div class="tb">
-            <div class="td" id="l-col">
+        <div class="tb" th:switch="${user.getUsername() == #authentication.principal.username}">
+            <div class="td" id="l-col" th:switch="${username == #authentication.principal.username}">
                     <button  th:if="${!ifFriend and !isAccount }" class="button-44" role="button" ><a style="text-decoration: none; color: white" th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
                     <button  th:if="${ifFriend and !isAccount}" class="button-44" role="button" style="color: white; background: #7f8fa6" disabled>A friend</button>
 <!--                    <button  th:if="${isAccount}" class="button-44" role="button" style="color: white; background: #7f8fa6" disabled>GET THE FUCK OUT OF HERE</button>-->
@@ -87,7 +86,7 @@
                 <br><br>
                     <div>
                         <button class="button-44" role="button">Follow</button>
-                        <button class="button-44" role="button"><a th:href="@{|/users/update/${user.getId()}|}" style="color: white; text-decoration: none">Update user</a></button>
+                        <button th:case="true" class="button-44" role="button"><a th:href="@{|/users/${user.getId()}/update/|}" style="color: white; text-decoration: none">Update user</a></button>
                     </div>
 
 
@@ -113,11 +112,12 @@
             <div class="td" id="m-col">
 
                     <div class="post" th:each="post, iter : ${posts}">
-                        <div class="post-top">
+                        <div class="post-top" th:switch="${post.getUser().username == #authentication.principal.username}">
                             <div class="dp">
                                 <a th:href="@{|/users/${post.getUser().getUsername()}|}">
-                                    <img th:if="${imageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >
-                                    <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
+                                    <img th:if="${post.user.images.size()  ==  0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                                    <img th:if="${post.user.images.size()  ==  1 or post.user.images.size()  ==  2 }" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
+                                    <img th:if="${post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
                                 </a>
                             </div>
                             <div class="post-info">
@@ -125,8 +125,11 @@
                                 <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
                                 <span class="time" th:text="${post.getCreationDate()}"></span>
                             </div>
-                            <a th:href="@{|/posts/delete/${post.id}|}" style="position: relative;left: 291px"><i class="fas fa-trash"></i></a>
-                            <a th:href="@{|/posts/update/${post.id}|}" style="position: relative;left: 291px"><i class="fas fa-edit"></i></a>
+                            <div th:case="true">
+                                <a  th:href="@{|/posts/${post.id}/delete/|}" style="position: relative;left: 291px"><i class="fas fa-trash"></i></a>
+                                <a  th:href="@{|/posts/${post.id}/update/|}" style="position: relative;left: 291px"><i class="fas fa-edit"></i></a>
+                            </div>
+
                         </div>
 
                         <div class="post-content">
@@ -146,12 +149,12 @@
                             <button class="like__btn">
                                 <span id="count" th:text="${post.likeCounter}"></span>
                                 <span id="icon" th:if="${post.liked}"><i class="fas fa-thumbs-up"></i></span>
-                                <a th:href="@{|/posts/like/${post.id}|}" th:unless="${post.liked}"><i class="far fa-thumbs-up"></i></a>
+                                <a th:href="@{|/posts/${post.id}/like/|}" th:unless="${post.liked}"><i class="far fa-thumbs-up"></i></a>
                             </button>
                             <button class="like__btn-2">
                                 <span id="count-2" th:text="${post.dislikeCounter}"></span>
                                 <span id="icon-2" th:if="${post.disliked}"><i class="fas fa-thumbs-down"></i></span>
-                                <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i class="far fa-thumbs-down"></i></a>
+                                <a th:href="@{|/posts/${post.id}/dislike/|}" th:unless="${post.disliked}"><i class="far fa-thumbs-down"></i></a>
                             </button>
 
 

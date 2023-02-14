@@ -3,6 +3,7 @@ package ua.socialnetwork.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -60,7 +61,7 @@ public class UserController {
         return "redirect:/users/create/continue/" + user.getId();
     }
 
-    @GetMapping("/update/{user_id}")
+    @GetMapping("/{user_id}/update/")
     public String updateForm(@PathVariable("user_id") Integer user_id,  Model model){
         User user = userService.readById(user_id);
 
@@ -68,6 +69,8 @@ public class UserController {
 
         return "update-user";
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #user.id")
     @PostMapping("/update")
     public String update(@Validated User user, @RequestParam(value = "userImage", required = false) MultipartFile userImage,
                                                                                             BindingResult result){
@@ -183,6 +186,7 @@ public class UserController {
         return "friend-list";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #id")
     @GetMapping("/{user_id}/delete")
     public String deleteUser(@PathVariable("user_id") Integer id){
         userService.delete(id);

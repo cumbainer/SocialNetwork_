@@ -6,6 +6,4 @@ import ua.socialnetwork.entity.User;
 
 public interface FriendRepo extends JpaRepository<Friend, Integer> {
     Friend findFriendByReceiver_UsernameAndSender_Username(String receiverUsername, String senderUsername);
-
-
 }
