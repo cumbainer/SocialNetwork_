@@ -1,0 +1,70 @@
+<script>
+    $(function () {
+        $(".btn-comment").on("click", function (e) {
+            e.preventDefault();
+            let postBlock = $(this).closest(".post");
+            let card = $('.card', postBlock);
+            card.toggleClass('d-none');
+
+        });
+
+        $('.card-comment textarea').keydown(function (e) {
+            if (e.keyCode == 13) {
+                let card =  $(this).closest('.card-comment') ;
+                $('.btn-comment-save', card).trigger('click');
+            }
+        });
+
+
+        $('.btn-comment-save').on('click', function (e) {
+            e.preventDefault();
+
+            let cardHeader = $(this).closest(".card-header");
+            let cardBody = cardHeader.next('.card-body');
+            let text = $('textarea', cardHeader).val() ;
+            if (text.length == 0 ){
+                return ;
+            }
+            let formData = new FormData();
+            formData.append('post_id', $(this).data('post-id'));
+            formData.append('comment', text);
+
+            $.ajax({
+                method: 'POST',
+                processData: false,
+                contentType: false,
+                type: 'POST',
+                url: '/comment/save',
+                data: formData,
+
+                success: function (response) {
+
+                    let li = $('<li>');
+                    li.addClass('list-group-item');
+                    let small = $('<small>');
+                    small.addClass('opacity-75').html(response[1]) ;
+                    let pSmall = $('<small>') ;
+                    pSmall.append(small);
+                    let i = $('<i>');
+                    i.append(pSmall);
+                    li.append(i);
+                    li.append($('<br>'));
+
+                    let span = $('<span>');
+                    span.html(formData.get('comment'));
+                    li.append(span);
+                    $('ul', cardBody).append(li);
+
+                    $('textarea', cardHeader).val('');
+
+                },
+                error: function (jqXHR) {
+
+                    console.log('Error: ' + jqXHR.status);
+                }
+            });
+
+        });
+
+    });
+</script>

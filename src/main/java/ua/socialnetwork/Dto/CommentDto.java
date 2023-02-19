@@ -1,32 +1,15 @@
 package ua.socialnetwork.Dto;
 
-public class CommentDto {
-    private String text;
-    private String user;
+import com.nimbusds.jose.shaded.json.JSONObject;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class CommentDto extends JSONObject{
+
     private int post_id;
 
-    @Override
-    public String toString() {
-        return "CommentDto{" +
-                "text='" + text + '\'' +
-                ", user='" + user + '\'' +
-                ", post_id=" + post_id +
-                '}';
-    }
+    private String text;
 
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
 }

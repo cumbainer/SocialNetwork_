@@ -144,10 +144,8 @@ public class UserController {
 
         model.addAttribute("user", user);
         model.addAttribute("image", user.getImages());
-
+        model.addAttribute("users", userService.getAll());
         model.addAttribute("size", user.getImages().size());
         return "profile-page";
     }
-
-
 }

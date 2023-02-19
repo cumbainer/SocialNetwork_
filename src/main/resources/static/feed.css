@@ -494,7 +494,7 @@ nav .nav-right a > i{
 
 
 .like__btn {
-    padding: 10px 15px;
+    padding: 5px 15px;
     /*background: #d74;*/
     background: forestgreen;
 
@@ -507,7 +507,7 @@ nav .nav-right a > i{
     cursor: pointer;
 }
 .like__btn-2 {
-    padding: 10px 15px;
+    padding: 5px 15px;
     background: forestgreen;
     font-size: 18px;
     font-family: "Open Sans", sans-serif;

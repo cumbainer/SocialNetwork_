@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class CommentServiceImpl implements CommentService {
+public class CommentServiceImpl implements CommentService{
 
     private CommentRepository commentRepository;
     public Comment create(Comment comment) {
@@ -18,19 +18,6 @@ public class CommentServiceImpl implements CommentService {
     }
     @Override
     public Comment update(Comment comment) {
-        return null;
-    }
-
-    @Override
-    public void delete(Long id) {}
-
-    @Override
-    public Comment likeComment(Comment comment) {
-        return null;
-    }
-
-    @Override
-    public Comment dislikeComment(Comment comment) {
         return null;
     }
 
@@ -48,9 +35,5 @@ public class CommentServiceImpl implements CommentService {
         return null;
     }
 
-    @Override
-    public List<Comment> getCommentsByUserId(int userId) {
-        return null;
-    }
 
 }

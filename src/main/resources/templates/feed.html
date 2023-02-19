@@ -2,16 +2,19 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
           integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="/feed.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.2.js"></script>
 
     <title>Socialhorse</title>
 </head>
@@ -19,25 +22,8 @@
 <body>
 
 <nav>
-    <div class="nav-left position-relative d-flex flex-column">
-        <div class="card mt-3 mb-1 border-0" >
-            <div class="header">
-         <img  alt="">
-         <input class="input-search border-0" style="background-color: #eee; border-radius: 25px; padding: 7px;" type="text" placeholder="Search Socialhorse`s..." data-search >
-            </div>
-        </div>
-        <div class="user-cards d-flex flex-column w-100">
-            <div class="card user-card mb-1" th:each="user, iter: ${users}" style="display: none;">
-                <a class="text-decoration-none text-muted" th:href="@{|/users/${user.username}|}">
 
-
-                <div class="header" data-header th:text="${user.firstName}+' '+${user.lastName}">
-
-                </div>
-                </a>
-            </div>
-        </div>
-    </div>
+    <div th:replace="search-bar"></div>
 
     <div class="nav-middle">
         <a th:href="@{/feed}" class="active">
@@ -47,7 +33,7 @@
             </a>
         </a>
 
-        <a th:href="@{|/users/${#authentication.principal.username}|}" >
+        <a th:href="@{|/users/${#authentication.principal.username}|}">
             <i class="fa fa-users"></i>
         </a>
         <a th:href="@{/msg/chat}">
@@ -73,14 +59,20 @@
                 <span class="profile"></span>
                 <div class="profile-pic" th:if="${#authentication.principal.username != null}">
 
-<!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ></a>-->
-<!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img   src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>-->
+                    <!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ></a>-->
+                    <!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img   src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>-->
 
-                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ><img th:if="${ifImageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
-                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${ifImageIsPresent == false}" class="button-profile" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>
+                    <a th:href="@{|/users/${#authentication.principal.username}|}"><img
+                            th:if="${ifImageIsPresent == true}" class="button-profile"
+                            th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt=""></a>
+                    <a th:href="@{|/users/${#authentication.principal.username}|}"><img
+                            th:if="${ifImageIsPresent == false}" class="button-profile"
+                            src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png"
+                            alt=""></a>
 
                 </div>
-                <p th:href="@{|/users/${#authentication.principal.username}|}" th:text="${#authentication.principal.fullName}"></p>
+                <p th:href="@{|/users/${#authentication.principal.username}|}"
+                   th:text="${#authentication.principal.fullName}"></p>
             </li>
             <li>
                 <i class="fa fa-user-friends"></i>
@@ -136,23 +128,27 @@
     <div class="middle-panel">
 
 
-
-        <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}" th:action="@{|/posts/new/${#authentication.principal.username}|}" th:object="${newPost}"  method="post">
+        <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}"
+              th:action="@{|/posts/new/${#authentication.principal.username}|}" th:object="${newPost}" method="post">
             <div class="post create">
                 <div class="post-top">
                     <div class="dp">
-                        <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" >
-                        <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
+                        <img th:if="${ifImageIsPresent == true}"
+                             th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="">
+                        <img th:if="${ifImageIsPresent == false}"
+                             src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png"
+                             alt="">
                     </div>
-                    <input type="text" th:placeholder="${'What is on your mind, ' + #authentication.principal.firstName + '?' }"
-                        th:field="*{body}"/>
+                    <input type="text"
+                           th:placeholder="${'What is on your mind, ' + #authentication.principal.firstName + '?' }"
+                           th:field="*{body}"/>
                 </div>
 
                 <div class="post-bottom">
 
                     <div class="upload">
-                        <button type = "button" class = "btn-warning">
-                            <i class = "fa fa-upload"></i> Upload File
+                        <button type="button" class="btn-warning">
+                            <i class="fa fa-upload"></i> Upload File
                             <input type="file" name="postImage">
                         </button>
                     </div>
@@ -169,30 +165,36 @@
         <div class="post" th:each="post, iter : ${posts}">
             <div class="post-top">
                 <div class="dp">
-<!--                    <a th:href="@{|/users/${post.getUser().getUsername()}|}">-->
-                        <img th:if="${ifImageIsPresent == true}" th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="" >
-                        <img th:if="${ifImageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
-<!--                    </a>-->
+                    <!--                    <a th:href="@{|/users/${post.getUser().getUsername()}|}">-->
+                    <img th:if="${ifImageIsPresent == true}"
+                         th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="">
+                    <img th:if="${ifImageIsPresent == false}"
+                         src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="">
+                    <!--                    </a>-->
                 </div>
                 <div class="post-info">
-                    <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}" style="text-decoration: #0e0e0e">
-                        <p class="name" th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
+                    <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}"
+                       style="text-decoration: #0e0e0e">
+                        <p class="name"
+                           th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
                     </a>
-<!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
-                    <span class="time" th:text="${post.getCreationDate()}" style = "position:relative; top: -20px;" ></span>
+                    <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
+                    <span class="time" th:text="${post.getCreationDate()}"
+                          style="position:relative; top: -20px;"></span>
 
                 </div>
 
-                <a th:href="@{|/posts/update/${post.id}|}" style="position: relative;left: 291px"><i class="fas fa-edit"></i></a>
+                <a th:href="@{|/posts/update/${post.id}|}" style="position: relative;left: 291px"><i
+                        class="fas fa-edit"></i></a>
             </div>
 
             <div class="post-content">
                 <div th:text="${post.body}"></div>
 
-                <div id="post-image" th:if="${post.getImage() != null}" >
-                    <a th:href="'http://localhost:2402/post/images/' + ${post.getImage().id}" target="_blank" >
-                    <img th:src="@{|/post/images/${post.getImage().id}|}"  />
-                    <img th:if="${post.getImage() == null}" />
+                <div id="post-image" th:if="${post.getImage() != null}">
+                    <a th:href="'http://localhost:2402/post/images/' + ${post.getImage().id}" target="_blank">
+                        <img th:src="@{|/post/images/${post.getImage().id}|}"/>
+                        <img th:if="${post.getImage() == null}"/>
                     </a>
                 </div>
 
@@ -209,20 +211,42 @@
                 <button class="like__btn-2">
                     <span id="count-2" th:text="${post.dislikeCounter}"></span>
                     <span id="icon-2" th:if="${post.disliked}"><i class="fas fa-thumbs-down"></i></span>
-                    <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i class="far fa-thumbs-down"></i></a>
+                    <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i
+                            class="far fa-thumbs-down"></i></a>
                 </button>
 
+                <div class="">
+                    <!--                    <i class="far fa-comment"></i>-->
+                    <a href="#" class="btn btn-outline-secondary text-none-decoration btn-comment border-0"><i
+                            class="far fa-comment"></i> Comment</a>
+                </div>
+            </div>
 
-
-                <div class="action">
-                    <i class="far fa-comment"></i>
-                    <span>Comment</span>
+            <div class="card mt-3 d-none card-comment">
+                <div class="card-header">
+                    <textarea class="w-100 my-2" rows="1" placeholder="Write your comment..."></textarea>
+                    <button class="btn btn-outline-success btn-comment-save" th:attr="data-post-id=${post.getId()}">Add
+                        comment
+                    </button>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="comment, iter : ${post.comments}">
+                            <i>
+                                <small>
+                                    <small class="opacity-75"
+                                           th:text="${comment.createdBy.firstName} + ' ' + ${comment.createdBy.lastName}"></small>
+                                </small>
+                            </i>
+                            <br>
+                            <span th:text="${comment.text}"></span>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
-
-
     </div>
+
     <div class="right-panel">
         <div class="pages-section">
             <h4>Your pages</h4>
@@ -297,39 +321,9 @@
     </div>
 
 
-
 </div>
 
-<script>
-    const searchInput = document.querySelector("[data-search]")
-
-    let users = []
-
-
-    searchInput.addEventListener("input", (e) => {
-
-        const value = e.target.value.toLowerCase().trim()
-        let cardsList = document.querySelectorAll('.user-card')
-        if (value.length == 0){
-            cardsList.forEach((card) => {
-                card.style.display = 'none';
-            })
-        }  else {
-            cardsList.forEach((card) => {
-                let cardHeader = card.querySelector('[data-header]')
-                let text = cardHeader.innerHTML.toLowerCase()
-                if (text.includes(value)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            })
-        }
-    })
-
-
-</script>
-
+<div th:replace="feed-js"></div>
 
 </body>
 
