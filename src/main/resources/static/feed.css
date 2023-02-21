@@ -110,7 +110,6 @@ nav .nav-right a > i{
 .container .left-panel ul{
     padding:10px 0px;
 }
-
 .container .left-panel ul li{
     list-style: none;
     display: flex;
@@ -428,8 +427,6 @@ nav .nav-right a > i{
     line-height: 1.5;
     border-radius: 3px;
     color: #fff;
-    /*background-color: #ffc100;*/
-    /*background-color: #d74;*/
     background-color: forestgreen;
     border: 0;
     transition: 0.2s;
