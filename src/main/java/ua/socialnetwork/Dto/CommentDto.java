@@ -11,5 +11,4 @@ public class CommentDto extends JSONObject{
     private int post_id;
 
     private String text;
-
 }

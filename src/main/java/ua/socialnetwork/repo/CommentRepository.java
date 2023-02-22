@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     @Query(value = "select * from comment where post_id = ?1 ORDER BY comment_id", nativeQuery = true)
-    List<Comment> findAllByPostId(Integer id);  //need check
-    Object findCommentById (Long id);
 
-
+    List<Comment> findAllByPostId(Integer id);
 }

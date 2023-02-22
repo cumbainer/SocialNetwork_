@@ -29,7 +29,6 @@ public class CommentsController {
     private final PostService postService;
     private UserServiceImpl userService;
 
-
     @GetMapping("/all/{post_id}")
     public String getAll (@PathVariable("post_id") int post_id, Model model){
         List<Comment> allComments = commentService.getCommentsByPostId(post_id);
@@ -44,7 +43,7 @@ public class CommentsController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public JSONArray sendPostMessage(@RequestParam("comment") String text, @RequestParam("post_id") int post_id, Principal principal){
+    public JSONArray createComment(@RequestParam("comment") String text, @RequestParam("post_id") int post_id, Principal principal){
 
         JSONArray array = new JSONArray();
         Post post = postService.readById(post_id);

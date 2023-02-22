@@ -27,8 +27,6 @@ public class Post {
 
     //TODO make like/dislike attached to an user
 
-
-
     @Column(name = "liked")
     private boolean liked;
     @Column(name = "disliked")
