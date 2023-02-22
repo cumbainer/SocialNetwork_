@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,10 +59,7 @@ public class FriendController {
     }
 
     @GetMapping("/notification")
-    public String getNotification(Model model){
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
+    public String getNotification(@AuthenticationPrincipal SecurityUser u, Model model){
 
         Set<Friend> receivedRequests = u.getReceivedRequests();
         model.addAttribute("requests", receivedRequests);

@@ -3,9 +3,13 @@
 }
 
 body {
+    min-height: 100vh;
     margin: 40px 0px;
     background-color: #385591;
 
+}
+footer{
+    margin-top: auto;
 }
 
 

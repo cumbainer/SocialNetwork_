@@ -117,6 +117,19 @@ public class UserServiceImpl implements UserService {
         }
         throw new NullEntityReferenceException("User can not be null");
     }
+
+    @Override
+    public User update(User user) {
+        if(user != null){
+            user.setRole(UserRole.USER);
+            user.setPassword(encoder.encode(user.getPassword()));
+            user.setEditionDate(LocalDateTime.now());
+            return userRepo.save(user);
+
+        }
+        throw new NullEntityReferenceException("User can not be null");
+    }
+
     @Override
     public User update(User user, MultipartFile userImage, MultipartFile imageBackground) {
 
@@ -170,7 +183,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-
     public SecurityUser getSecurityUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return (SecurityUser) authentication.getPrincipal();

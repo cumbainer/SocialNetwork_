@@ -1,5 +1,6 @@
 package ua.socialnetwork.controller;
 
+import org.atmosphere.config.service.Get;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -11,5 +12,7 @@ public class LoginController {
 
         return "login-page";
     }
+
+
 
 }

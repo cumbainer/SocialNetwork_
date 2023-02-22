@@ -167,7 +167,7 @@
         </form>
 
         <div class="post" th:each="post, iter : ${posts}">
-            <div class="post-top" th:switch="${post.getUser().getUsername() == auth.principal.username}">
+            <div class="post-top" th:switch="${post.getUser().getUsername() == #authentication.principal.username}">
                 <div class="dp">
                     <img th:if="${post.user.images.size() == 1 and post.user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
                     <img th:if="${post.user.images.size() == 2 and post.user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${post.user.images.get(1).getId()}|}">

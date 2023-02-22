@@ -31,7 +31,6 @@ public class User {
     private String firstName;
 
     @Column(name = "lastName", nullable = false)
-
     private String lastName;
 
     @Column(name = "username", unique = true)
@@ -99,4 +98,12 @@ public class User {
         images.add(image);
     }
 
+    public User(int id, String firstName, String lastName, String username, String password, String email) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }

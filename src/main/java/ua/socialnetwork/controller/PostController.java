@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.entity.Comment;
 import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.entity.enums.PostAction;
@@ -28,11 +30,8 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/feed")
-    public String getAll(Model model){
+    public String getAll(@AuthenticationPrincipal SecurityUser u, Model model){
         boolean ifImageIsPresent = false;
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
         if(u.getImages().size() > 0){
             ifImageIsPresent = true;
@@ -42,12 +41,11 @@ public class PostController {
         model.addAttribute("posts", postService.getAll());
         model.addAttribute("newPost", new Post());
         model.addAttribute("users", userService.getAll());
-        model.addAttribute("auth", authentication);
 
         return "feed";
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIM') or #post.user.id = authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIM') or authentication.principal.username == #username")
     @PostMapping("/new/{username}")
     public String create(@PathVariable("username") String username, Post post,
                             @RequestParam(value = "postImage",required = false) MultipartFile postImage, BindingResult result){
@@ -56,6 +54,7 @@ public class PostController {
         postService.create(post, postImage);
         return "redirect:/feed";
     }
+
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @postServiceImpl.readById(#postId).user.id")
     @GetMapping("/{post_id}/update/")
@@ -84,11 +83,9 @@ public class PostController {
 
         return "redirect:/feed";
     }
-    @PreAuthorize("hasRole('ROLE_ADMIM') or #postId == authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIM') or @postServiceImpl.readById(#postId).user.id == authentication.principal.id")
     @GetMapping("/{post_id}/delete/")
-    public String delete(@PathVariable("post_id") Integer postId){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
+    public String delete(@PathVariable("post_id") Integer postId, @AuthenticationPrincipal SecurityUser u){
 
         String username = u.getUsername();
 

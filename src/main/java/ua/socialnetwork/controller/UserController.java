@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,7 @@ import ua.socialnetwork.service.FriendService;
 import ua.socialnetwork.service.UserService;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.service.PostService;
+import ua.socialnetwork.service.impl.CustomUserDetailService;
 
 
 import java.time.LocalDateTime;
@@ -79,7 +81,6 @@ public class UserController {
             return "update-user";
         }
         userService.update(user, userImage);
-        user.setEditionDate(LocalDateTime.now());
         log.info("User with id: " + user.getId() + " has been updated");
         return "redirect:/users/"+user.getUsername();
     }
@@ -123,12 +124,10 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public String getUser(@PathVariable("username") String username, Model model){
+    public String getUser(@PathVariable("username") String username, @AuthenticationPrincipal SecurityUser u, Model model){
         User user = userService.readByUsername(username);
         List<Post> posts = postService.getPostsByUser_Username(username);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
         boolean ifImageIsPresent = false;
         boolean ifFriend = false;
@@ -164,17 +163,10 @@ public class UserController {
     }
 
     @GetMapping("/{username}/friends")
-    public String getFriendList(@PathVariable("username") String username, Model model){
+    public String getFriendList(@PathVariable("username") String username,@AuthenticationPrincipal SecurityUser u, Model model){
         User user = userService.readByUsername(username);
 
-        boolean ifImageIsPresent = false;
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
-
-        if(u.getImages().size() > 0){
-            ifImageIsPresent = true;
-        }
+        boolean ifImageIsPresent = u.getImages().size() > 0;
 
         model.addAttribute("imageIsPresent", ifImageIsPresent);
         model.addAttribute("users", userService.getAll());
@@ -186,11 +178,11 @@ public class UserController {
         return "friend-list";
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #id")
-    @GetMapping("/{user_id}/delete")
-    public String deleteUser(@PathVariable("user_id") Integer id){
-        userService.delete(id);
-        return "redirect:/feed";
-    }
+        @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #id")
+        @GetMapping("/{user_id}/delete")
+        public String deleteUser(@PathVariable("user_id") Integer id){
+            userService.delete(id);
+            return "redirect:/feed";
+        }
 
 }
