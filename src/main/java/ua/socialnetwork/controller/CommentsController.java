@@ -33,18 +33,18 @@ public class CommentsController {
         return "create-comment";
     }
 
-    @PostMapping("/add/{post_id}")
-    public String create(@PathVariable("post_id") int post_id,
-                         @Validated @ModelAttribute("comment") Comment comment) {
-        try {
-            comment.setPost(postService.readById(post_id));
-            commentService.create(comment);
-        }catch (EntityNotFoundException e){
-            throw new EntityNotFoundException("Exception");
-        }
-        log.info("Comment with id:" + comment.getId() + " was created");
-        return "redirect:/posts";
-    }
+//    @PostMapping("/add/{post_id}")
+//    public String create(@PathVariable("post_id") int post_id,
+//                         @Validated @ModelAttribute("comment") Comment comment) {
+//        try {
+//            comment.setPost(postService.readById(post_id));
+//            commentService.create(comment);
+//        }catch (EntityNotFoundException e){
+//            throw new EntityNotFoundException("Exception");
+//        }
+//        log.info("Comment with id:" + comment.getId() + " was created");
+//        return "redirect:/posts";
+//    }
 
     @GetMapping("/liked/{comment_id}")
     public String like(@PathVariable("comment_id") long comment_id, Comment comment){

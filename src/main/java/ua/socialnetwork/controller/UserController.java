@@ -3,6 +3,7 @@ package ua.socialnetwork.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.dto.PostDto;
 import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.entity.User;
@@ -123,7 +125,7 @@ public class UserController {
     @GetMapping("/{username}")
     public String getUser(@PathVariable("username") String username, @AuthenticationPrincipal SecurityUser authUser, Model model) {
         User user = userService.readByUsername(username);
-        List<Post> posts = postService.getPostsByUser_Username(username);
+        List<PostDto> posts = postService.getPostsByUser_Username(username);
 
         Friend friend = friendService.getFriendByReceiverUsername(username, authUser.getUsername());
 

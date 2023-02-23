@@ -133,7 +133,7 @@
 
 
 
-        <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}" th:action="@{|/posts/new/${#authentication.principal.username}|}" th:object="${newPost}"  method="post">
+        <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}" th:action="@{|/posts/new/${#authentication.principal.username}/|}" th:object="${newPost}"  method="post">
             <div class="post create">
                 <div class="post-top">
                     <div class="dp">

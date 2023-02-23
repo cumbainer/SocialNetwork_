@@ -50,7 +50,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne()
     private PostImage image;
 
     @Override

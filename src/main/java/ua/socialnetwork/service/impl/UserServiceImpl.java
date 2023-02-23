@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(encoder.encode(user.getPassword()));
         }
 
+        log.info("New account was created with id: " + user.getId());
         user.setCreationDate(LocalDateTime.now());
         user.setRole(UserRole.USER);
         return userRepo.save(user);
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
         }
         log.info("Added image: " + userImage.getName());
 
+        log.info("New account was created with id: " + user.getId());
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole(UserRole.USER);
         user.setCreationDate(LocalDateTime.now());
@@ -149,7 +151,7 @@ public class UserServiceImpl implements UserService {
     public void delete(int id) {
         if (id != 0) {
             userRepo.deleteById(id);
-            log.info("An user with id: " + id + " was deleted in UserServiceImpl");
+            log.info("An user with id: " + id + " was deleted");
         }
     }
 

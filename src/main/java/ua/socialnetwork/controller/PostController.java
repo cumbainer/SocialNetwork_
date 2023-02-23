@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.dto.PostDto;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.entity.enums.PostAction;
 import ua.socialnetwork.security.SecurityUser;
@@ -38,43 +39,42 @@ public class PostController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIM') or authentication.principal.username == #username")
-    @PostMapping("/new/{username}")
-    public String create(@PathVariable("username") String username, Post post,
+    @PostMapping("/new/{username}/")
+    public String create(@PathVariable("username") String username, PostDto postDto,
                          @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
-        post.setUser(userService.readByUsername(username));
 
-        postService.create(post, postImage);
+        postDto.setUser(userService.readByUsername(username));
+
+        postService.create(postDto, postImage);
         return "redirect:/feed";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @postServiceImpl.readById(#postId).user.id")
     @GetMapping("/{post_id}/update/")
     public String editForm(@PathVariable("post_id") Integer postId, Model model) {
-        Post post = postService.readById(postId);
 
-        model.addAttribute("post", post);
+        model.addAttribute("post", postService.readById(postId));
 
         return "update-post";
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIM') or #post.user.id == authentication.principal.id")
+    @PreAuthorize("hasRole('ROLE_ADMIM') or #postDto.user.id == authentication.principal.id")
     @PostMapping("/update/")
-    public String edit(Post post, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
+    public String edit(PostDto postDto, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
 
         if (result.hasErrors()) {
-            log.warn("Binding result had an error in Post Controller update with post, id: " + post.getId());
+            log.warn("Binding result had an error in Post Controller update with post, id: " + postDto.getId());
             return "update-post";
         }
 
-        log.info("A post has been edited " + post.getId());
-        postService.update(post, postImage);
-        post.setEditionDate(LocalDateTime.now());
+        postDto.setEditionDate(LocalDateTime.now());
+        postService.update(postDto, postImage);
 
         return "redirect:/feed";
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIM') or @postServiceImpl.readById(#postId).user.id == authentication.principal.id")
-    @DeleteMapping("/{post_id}/delete/")
+    @GetMapping("/{post_id}/delete/")
     public String delete(@PathVariable("post_id") Integer postId, @AuthenticationPrincipal SecurityUser authUser) {
 
         String username = authUser.getUsername();
@@ -87,20 +87,20 @@ public class PostController {
     @GetMapping("/{post_id}/like/")
     public String like(@PathVariable("post_id") Integer post_id) {
 
-        Post post = postService.readById(post_id);
+        PostDto postDto = postService.readById(post_id);
 
-        postService.makeReaction(post, PostAction.LIKE);
-        postService.create(post);
+        postService.makeReaction(postDto, PostAction.LIKE);
+        postService.create(postDto);
         return "redirect:/feed";
     }
 
     @GetMapping("/{post_id}/dislike/")
     public String dislike(@PathVariable("post_id") Integer post_id) {
 
-        Post post = postService.readById(post_id);
+        PostDto postDto = postService.readById(post_id);
 
-        postService.makeReaction(post, PostAction.DISLIKE);
-        postService.create(post);
+        postService.makeReaction(postDto, PostAction.DISLIKE);
+        postService.create(postDto);
         return "redirect:/feed";
     }
 

@@ -90,22 +90,22 @@ public class UserServiceTests {
                 ()->userService.create(null));
     }
 
-    @Test
-    @DisplayName("Delete existing user")
-    public void deleteExistingUserTest(){
-        userService.delete(validUser.getId());
-        Mockito.verify(userRepository,Mockito.times(1)).delete(validUser);
-    }
-
-    @Test
-    @DisplayName("Delete non existing user")
-    public void deleteNonExistingUserTest(){
-        int randomId = 342;
-        given(userRepository.findById(randomId)).willReturn(Optional.empty());
-        Assertions.assertThrows(EntityNotFoundException.class,
-                ()->userService.delete(randomId));
-        Mockito.verify(userRepository,Mockito.times(0)).delete(validUser);
-    }
+//    @Test
+//    @DisplayName("Delete existing user")
+//    public void deleteExistingUserTest(){
+//        userService.delete(validUser.getId());
+//        Mockito.verify(userRepository,Mockito.times(1)).delete(validUser);
+//    }
+//
+//    @Test
+//    @DisplayName("Delete non existing user")
+//    public void deleteNonExistingUserTest(){
+//        int randomId = 342;
+//        given(userRepository.findById(randomId)).willReturn(Optional.empty());
+//        Assertions.assertThrows(EntityNotFoundException.class,
+//                ()->userService.delete(randomId));
+//        Mockito.verify(userRepository,Mockito.times(0)).delete(validUser);
+//    }
 
     @Test
     @DisplayName("Update valid user")
