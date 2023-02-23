@@ -18,8 +18,6 @@ import ua.socialnetwork.service.UserService;
 public class UserRestController {
     private UserService userService;
 
-
-
     @GetMapping(value = "/get/{username}", produces = "application/json")
     public ResponseEntity<User> getInfoByUsername(@PathVariable("username") String username){
 

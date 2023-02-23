@@ -23,19 +23,16 @@ public class ImageController {
 
     @GetMapping("/images/{id}")
     private ResponseEntity<?> getImage(@PathVariable Integer id) {
-
         UserImage image = userImageRepo.findById(id).orElse(null);
 
         return ResponseEntity.ok().header("fileName", image.getOriginalFileName()).contentType(MediaType.valueOf(image.getContentType())).contentLength(image.getSize()).body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
     }
+
     @GetMapping("/post/images/{id}")
     private ResponseEntity<?> getPostImage(@PathVariable Integer id) {
-
-        PostImage image =  postImageRepo.findById(id).orElse(null);
+        PostImage image = postImageRepo.findById(id).orElse(null);
 
         return ResponseEntity.ok().header("postFileName", image.getOriginalFileName()).contentType(MediaType.valueOf(image.getContentType())).contentLength(image.getSize()).body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));
     }
-
-
 
 }

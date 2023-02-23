@@ -4,14 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ua.socialnetwork.entity.UserImage;
 import ua.socialnetwork.entity.User;
+import ua.socialnetwork.entity.UserImage;
 import ua.socialnetwork.entity.enums.UserRole;
 import ua.socialnetwork.exception.NullEntityReferenceException;
 import ua.socialnetwork.exception.UserAlreadyExistsException;
@@ -19,8 +18,6 @@ import ua.socialnetwork.repo.UserRepo;
 import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.UserService;
 
-
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,13 +30,11 @@ public class UserServiceImpl implements UserService {
     private UserRepo userRepo;
 
     @Override
-    public User create(User user ) {
+    public User create(User user) {
 
-        if(ifUsernameExists(user.getUsername())){
-
+        if (ifUsernameExists(user.getUsername())) {
             throw new UserAlreadyExistsException("There already is an account with username: " + user.getUsername());
-        }
-        else if(user.getPassword() != null) {
+        } else if (user.getPassword() != null) {
             user.setPassword(encoder.encode(user.getPassword()));
         }
 
@@ -52,11 +47,10 @@ public class UserServiceImpl implements UserService {
     public User create(User user, MultipartFile userImage) {
         UserImage image;
 
-        if(ifUsernameExists(user.getUsername())){
+        if (ifUsernameExists(user.getUsername())) {
 
             throw new UserAlreadyExistsException("There already is an account with username: " + user.getUsername());
-        }
-        else if(userImage.getSize() != 0) {
+        } else if (userImage.getSize() != 0) {
             image = toImageEntity(userImage);
             user.setProfileImageToUser(image);
         }
@@ -74,16 +68,13 @@ public class UserServiceImpl implements UserService {
         UserImage image;
         UserImage image2;
 
-        if(ifUsernameExists(user.getUsername())){
+        if (ifUsernameExists(user.getUsername())) {
 
             throw new UserAlreadyExistsException("There already is an account with username: " + user.getUsername());
-        }
-
-        else if (userImage.getSize() != 0) {
+        } else if (userImage.getSize() != 0) {
             image = toImageEntity(userImage);
             user.setProfileImageToUser(image);
-        }
-        else if (userImage.getSize() != 0) {
+        } else if (imageBackground.getSize() != 0) {
             image2 = toImageEntity(imageBackground);
             user.setProfileImageToUser(image2);
         }
@@ -97,13 +88,11 @@ public class UserServiceImpl implements UserService {
         return userRepo.save(user);
     }
 
-    //ToDO make 1 method to not duplicate code
-
     @Override
     public User update(User user, MultipartFile userImage) {
         UserImage image;
 
-        if(user != null){
+        if (user != null) {
             if (userImage.getSize() != 0) {
                 image = toImageEntity(userImage);
                 user.setBackgroundImageToUser(image);
@@ -120,7 +109,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        if(user != null){
+        if (user != null) {
             user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
             user.setEditionDate(LocalDateTime.now());
@@ -135,7 +124,7 @@ public class UserServiceImpl implements UserService {
 
         UserImage image;
         UserImage image2;
-        if(user != null){
+        if (user != null) {
             if (userImage.getSize() != 0) {
                 image = toImageEntity(userImage);
                 user.setProfileImageToUser(image);
@@ -158,10 +147,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(int id) {
-        User user = readById(id);
-        if(id != 0){
-            userRepo.delete(user);
-            log.info("An user with id: " + user.getId() + " was deleted in UserServiceImpl");
+        if (id != 0) {
+            userRepo.deleteById(id);
+            log.info("An user with id: " + id + " was deleted in UserServiceImpl");
         }
     }
 
@@ -182,30 +170,22 @@ public class UserServiceImpl implements UserService {
         return userRepo.findAll();
     }
 
-    @Override
-    public SecurityUser getSecurityUser(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return (SecurityUser) authentication.getPrincipal();
-    }
-
-    private boolean ifUsernameExists(String username){
+    private boolean ifUsernameExists(String username) {
         Optional<User> user = userRepo.findUserByUsername(username);
 
         User ifUser = user.orElse(null);
         return ifUser != null;
     }
 
+    @SneakyThrows
     private UserImage toImageEntity(MultipartFile userImage) {
         UserImage image = new UserImage();
         image.setName(userImage.getName());
         image.setOriginalFileName(userImage.getOriginalFilename());
         image.setContentType(userImage.getContentType());
         image.setSize(userImage.getSize());
-        try {
-            image.setBytes(userImage.getBytes());
-        }catch (IOException ex){
-            ex.printStackTrace();
-        }
+        image.setBytes(userImage.getBytes());
+
         return image;
     }
 }

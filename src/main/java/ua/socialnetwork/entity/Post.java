@@ -47,7 +47,7 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     @OneToOne(cascade = CascadeType.ALL)

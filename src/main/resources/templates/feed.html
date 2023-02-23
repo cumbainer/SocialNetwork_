@@ -65,16 +65,12 @@
     </div>
 </nav>
 
-
 <div class="container" style="max-width: 100%;">
     <div class="left-panel">
         <ul>
             <li>
                 <span class="profile"></span>
                 <div class="profile-pic" th:if="${#authentication.principal.username != null}">
-
-<!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ></a>-->
-<!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img   src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>-->
 
                     <a  th:href="@{|/users/${#authentication.principal.username}|}"  ><img th:if="${imageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
                     <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${imageIsPresent == false}" class="button-profile" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>
@@ -197,9 +193,7 @@
                     <img th:if="${post.getImage() == null}" />
                     </a>
                 </div>
-
             </div>
-
 
             <div class="post-bottom">
 
@@ -223,11 +217,9 @@
             </div>
         </div>
 
-
     </div>
 
 </div>
-
 <script>
     const searchInput = document.querySelector("[data-search]")
 
@@ -258,10 +250,5 @@
 
 </script>
 
-
 </body>
-<!--<footer>-->
-<!--    <div th:replace="footer"></div>-->
-<!--</footer>-->
-
 </html>

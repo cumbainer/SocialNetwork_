@@ -80,7 +80,6 @@ public class User {
     @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private Set<Friend> receivedRequests;
 
-
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
             mappedBy = "user")
     private List<UserImage> images = new ArrayList<>();
@@ -96,14 +95,5 @@ public class User {
             images.add(0, image);
         }
         images.add(image);
-    }
-
-    public User(int id, String firstName, String lastName, String username, String password, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.email = email;
     }
 }

@@ -1,4 +1,4 @@
-package ua.socialnetwork.Dto;
+package ua.socialnetwork.dto;
 
 public class CommentDto {
     private String text;

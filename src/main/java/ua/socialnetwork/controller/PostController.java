@@ -4,18 +4,15 @@ package ua.socialnetwork.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.socialnetwork.entity.Comment;
-import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.entity.enums.PostAction;
+import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.PostService;
 import ua.socialnetwork.service.UserService;
 
@@ -30,14 +27,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/feed")
-    public String getAll(@AuthenticationPrincipal SecurityUser u, Model model){
-        boolean ifImageIsPresent = false;
+    public String getAll(@AuthenticationPrincipal SecurityUser authUser, Model model) {
 
-        if(u.getImages().size() > 0){
-            ifImageIsPresent = true;
-        }
-
-        model.addAttribute("imageIsPresent", ifImageIsPresent);
+        model.addAttribute("imageIsPresent", authUser.getImages().size() > 0);
         model.addAttribute("posts", postService.getAll());
         model.addAttribute("newPost", new Post());
         model.addAttribute("users", userService.getAll());
@@ -48,17 +40,16 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_ADMIM') or authentication.principal.username == #username")
     @PostMapping("/new/{username}")
     public String create(@PathVariable("username") String username, Post post,
-                            @RequestParam(value = "postImage",required = false) MultipartFile postImage, BindingResult result){
+                         @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
         post.setUser(userService.readByUsername(username));
 
         postService.create(post, postImage);
         return "redirect:/feed";
     }
 
-
     @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @postServiceImpl.readById(#postId).user.id")
     @GetMapping("/{post_id}/update/")
-    public String editForm(@PathVariable("post_id") Integer postId, Model model){
+    public String editForm(@PathVariable("post_id") Integer postId, Model model) {
         Post post = postService.readById(postId);
 
         model.addAttribute("post", post);
@@ -66,14 +57,12 @@ public class PostController {
         return "update-post";
     }
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id = @postServiceImpl.readById(#post.id).user.id")
     @PreAuthorize("hasRole('ROLE_ADMIM') or #post.user.id == authentication.principal.id")
     @PostMapping("/update/")
-    public String edit(Post post, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage ){
+    public String edit(Post post, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
 
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             log.warn("Binding result had an error in Post Controller update with post, id: " + post.getId());
-
             return "update-post";
         }
 
@@ -83,30 +72,30 @@ public class PostController {
 
         return "redirect:/feed";
     }
-    @PreAuthorize("hasRole('ROLE_ADMIM') or @postServiceImpl.readById(#postId).user.id == authentication.principal.id")
-    @GetMapping("/{post_id}/delete/")
-    public String delete(@PathVariable("post_id") Integer postId, @AuthenticationPrincipal SecurityUser u){
 
-        String username = u.getUsername();
+    @PreAuthorize("hasRole('ROLE_ADMIM') or @postServiceImpl.readById(#postId).user.id == authentication.principal.id")
+    @DeleteMapping("/{post_id}/delete/")
+    public String delete(@PathVariable("post_id") Integer postId, @AuthenticationPrincipal SecurityUser authUser) {
+
+        String username = authUser.getUsername();
 
         postService.delete(postId);
 
-        return "redirect:/users/"+username;
+        return "redirect:/users/" + username;
     }
 
     @GetMapping("/{post_id}/like/")
-    public String like(@PathVariable("post_id") Integer post_id, Model model){
+    public String like(@PathVariable("post_id") Integer post_id) {
 
         Post post = postService.readById(post_id);
 
         postService.makeReaction(post, PostAction.LIKE);
-
         postService.create(post);
         return "redirect:/feed";
     }
 
     @GetMapping("/{post_id}/dislike/")
-    public String dislike(@PathVariable("post_id") Integer post_id, Model model){
+    public String dislike(@PathVariable("post_id") Integer post_id) {
 
         Post post = postService.readById(post_id);
 

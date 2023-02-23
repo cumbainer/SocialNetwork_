@@ -35,6 +35,7 @@ public class GlobalExceptionHandler {
     public ModelAndView forbiddenExceptionHandler(HttpServletRequest request, HttpClientErrorException.Forbidden exception) {
         return getModelAndView(request, HttpStatus.FORBIDDEN, exception);
     }
+
     private ModelAndView getModelAndView(HttpServletRequest request, HttpStatus httpStatus, Exception exception) {
         log.error("Exception raised = {} :: URL = {}", exception.getMessage(), request.getRequestURL());
 

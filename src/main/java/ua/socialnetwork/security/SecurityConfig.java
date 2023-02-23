@@ -42,7 +42,6 @@ public class SecurityConfig {
                 .clearAuthentication(true)
                 .logoutSuccessUrl("/login");
 
-
         return http.build();
     }
 
@@ -50,7 +49,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
-
-
 
 }

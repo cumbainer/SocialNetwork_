@@ -99,21 +99,6 @@ public class SecurityUser implements UserDetails {
         return -1;
 
     }
-//    public int getImageForFeed() {
-//        List<UserImage> images = user.getImages();
-//
-//        if (images.size() == 1 && images.get(0).getName().equals("userImage")) {
-//            return images.get(0).getId();
-//        } else if (images.size() >= 2) {
-//            int lastIndex = images.size() - 1;
-//            if (images.get(0).getName().equals("backgroundImage")) {
-//                return images.get(lastIndex).getId();
-//            } else {
-//                return images.get(1).getId();
-//            }
-//        }
-//        return -1;
-//    }
 
     public Set<Friend> getReceivedRequests(){
         return user.getReceivedRequests();

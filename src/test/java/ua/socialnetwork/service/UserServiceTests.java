@@ -30,7 +30,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class UserServiceTests {
-
     @Autowired
     private UserService userService;
 
@@ -115,7 +114,7 @@ public class UserServiceTests {
         validUser.setFirstName(newName);
         given(userRepository.save(validUser)).willReturn(validUser);
         String nameAfter = userService.update(validUser).getFirstName();
-        Assertions.assertTrue(nameAfter.equals(newName));
+        Assertions.assertEquals(nameAfter, newName);
         Mockito.verify(userRepository,Mockito.times(1)).save(validUser);
     }
 

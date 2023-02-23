@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 //@NoArgsConstructor
 @Table(name = "comments")
 public class Comment {
-
     public Long getId() {
         return id;
     }
@@ -45,8 +44,7 @@ public class Comment {
     @Column(name = "deletedDate")
     private LocalDateTime deletedDate;
 
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 }

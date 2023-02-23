@@ -21,7 +21,6 @@ import java.util.List;
 @RequestMapping("/comment")
 @Slf4j
 public class CommentsController {
-
     private final CommentServiceImpl commentService;
     private final PostService postService;
     private CommentRepository commentRepository;
