@@ -4,18 +4,17 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.dto.UserDto;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.UserImage;
 import ua.socialnetwork.entity.enums.UserRole;
 import ua.socialnetwork.exception.NullEntityReferenceException;
 import ua.socialnetwork.exception.UserAlreadyExistsException;
 import ua.socialnetwork.repo.UserRepo;
-import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.UserService;
 
 import java.time.LocalDateTime;
@@ -26,11 +25,14 @@ import java.util.Optional;
 @AllArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-    private PasswordEncoder encoder;
-    private UserRepo userRepo;
+    private final PasswordEncoder encoder;
+    private final UserRepo userRepo;
+    private final ModelMapper modelMapper;
 
     @Override
-    public User create(User user) {
+    public User create(UserDto userDto) {
+
+        User user = modelMapper.map(userDto, User.class);
 
         if (ifUsernameExists(user.getUsername())) {
             throw new UserAlreadyExistsException("There already is an account with username: " + user.getUsername());
@@ -45,7 +47,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user, MultipartFile userImage) {
+    public User create(UserDto userDto, MultipartFile userImage) {
+        User user = modelMapper.map(userDto, User.class);
         UserImage image;
 
         if (ifUsernameExists(user.getUsername())) {
@@ -66,7 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(User user, MultipartFile userImage, MultipartFile imageBackground) {
+    public User create(UserDto userDto, MultipartFile userImage, MultipartFile imageBackground) {
+        User user = modelMapper.map(userDto, User.class);
         UserImage image;
         UserImage image2;
 
@@ -91,7 +95,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, MultipartFile userImage) {
+    public User update(UserDto userDto, MultipartFile userImage) {
+        User user = modelMapper.map(userDto, User.class);
         UserImage image;
 
         if (user != null) {
@@ -110,8 +115,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user) {
-        if (user != null) {
+    public User update(UserDto userDto) {
+
+        if (userDto != null) {
+            User user = modelMapper.map(userDto, User.class);
             user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
             user.setEditionDate(LocalDateTime.now());
@@ -122,7 +129,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, MultipartFile userImage, MultipartFile imageBackground) {
+    public User update(UserDto userDto, MultipartFile userImage, MultipartFile imageBackground) {
+        User user = modelMapper.map(userDto, User.class);
 
         UserImage image;
         UserImage image2;
@@ -156,20 +164,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User readById(int id) {
-        return userRepo.findById(id).orElseThrow(() ->
+    public UserDto readById(int id) {
+        return userRepo.findById(id).map(user -> modelMapper.map(user, UserDto.class)).orElseThrow(() ->
                 new EntityNotFoundException("User with id: " + id + "not found"));
     }
 
     @Override
-    public User readByUsername(String username) {
-        return userRepo.findUserByUsername(username).orElseThrow(() ->
+    public UserDto readByUsername(String username) {
+        return userRepo.findUserByUsername(username).map(user -> modelMapper.map(user, UserDto.class)).orElseThrow(() ->
                 new EntityNotFoundException("User with username: " + username + "not found"));
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepo.findAll();
+    public List<UserDto> getAll() {
+        return userRepo.findAll().stream().map(user -> modelMapper.map(user, UserDto.class)).toList();
     }
 
     private boolean ifUsernameExists(String username) {

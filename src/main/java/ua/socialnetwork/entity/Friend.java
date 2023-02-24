@@ -2,11 +2,9 @@ package ua.socialnetwork.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.checkerframework.checker.units.qual.A;
 import ua.socialnetwork.entity.enums.FriendStatus;
 
 import java.time.LocalDateTime;
@@ -35,6 +33,4 @@ public class Friend {
 
     @Column(name = "sendingRequestDate")
     private LocalDateTime sendingRequestDate;
-
-
 }

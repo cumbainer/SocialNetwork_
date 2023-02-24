@@ -1,12 +1,13 @@
 package ua.socialnetwork.service;
 
+import ua.socialnetwork.dto.FriendDto;
 import ua.socialnetwork.entity.Friend;
 
 public interface FriendService {
 
-    Friend create(Friend friend, int senderId, int receiverId);
+    Friend create(FriendDto friendDto, int senderId, int receiverId);
 
     void removeFromFriends(int friendEntityId);
 
-    Friend getFriendByReceiverUsername(String receiverUsername, String senderUsername);
+    FriendDto getFriendByReceiverUsername(String receiverUsername, String senderUsername);
 }

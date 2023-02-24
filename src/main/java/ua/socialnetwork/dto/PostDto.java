@@ -12,7 +12,7 @@ import java.util.List;
 public class PostDto {
     private int id;
     private String body;
-    private User user;
+    private UserDto user;
     private List<Comment> comments;
     private LocalDateTime creationDate;
     private LocalDateTime editionDate;

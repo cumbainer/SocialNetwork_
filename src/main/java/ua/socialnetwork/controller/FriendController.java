@@ -3,12 +3,11 @@ package ua.socialnetwork.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ua.socialnetwork.entity.Friend;
-import ua.socialnetwork.entity.User;
+import ua.socialnetwork.dto.FriendDto;
+import ua.socialnetwork.dto.UserDto;
 import ua.socialnetwork.service.FriendService;
 import ua.socialnetwork.service.UserService;
 
@@ -25,10 +24,10 @@ public class FriendController {
     public String addFriend(@PathVariable("sender_username") String senderUsername,
                             @PathVariable("receiver_username") String receiverUsername) {
 
-        User receiver = userService.readByUsername(receiverUsername);
-        User sender = userService.readByUsername(senderUsername);
+        UserDto receiver = userService.readByUsername(receiverUsername);
+        UserDto sender = userService.readByUsername(senderUsername);
 
-        Friend friend = new Friend();
+        FriendDto friend = new FriendDto();
         friend.setSender(sender);
         friend.setReceiver(receiver);
 
@@ -38,7 +37,7 @@ public class FriendController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @friendServiceImpl.getById(#friendId).sender.id")
-    @DeleteMapping("/{friendId}/delete")
+    @GetMapping("/{friendId}/delete")
     public String deleteFromFriend(@PathVariable("friendId") Integer friendId) {
         friendService.removeFromFriends(friendId);
 

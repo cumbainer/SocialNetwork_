@@ -66,7 +66,7 @@ public class Post {
                 '}';
     }
 
-    public void setImageToPost(PostImage userImage){
+    public void setImageToPost(PostImage userImage) {
 
         userImage.setPost(this);
         image = userImage;
