@@ -3,14 +3,17 @@ package ua.socialnetwork.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "posts")
 public class Post {
@@ -50,7 +53,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     private PostImage image;
 
     @Override
@@ -66,10 +69,10 @@ public class Post {
                 '}';
     }
 
-    public void setImageToPost(PostImage userImage) {
+    public void setImageToPost(PostImage postImage) {
 
-        userImage.setPost(this);
-        image = userImage;
+        postImage.setPost(this);
+        image = postImage;
     }
 
 }

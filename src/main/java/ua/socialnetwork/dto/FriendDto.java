@@ -1,6 +1,7 @@
 package ua.socialnetwork.dto;
 
 import lombok.Data;
+import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.enums.FriendStatus;
 
 import java.time.LocalDateTime;

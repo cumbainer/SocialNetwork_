@@ -91,7 +91,7 @@ public class User {
 
     public void setBackgroundImageToUser(UserImage image){
         image.setUser(this);
-        if(this.getImages().size() >= 1){
+        if(this.getImages() != null && this.getImages().size() >= 1){
             images.add(0, image);
         }
         images.add(image);

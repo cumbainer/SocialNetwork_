@@ -245,10 +245,11 @@
 <div class="container">
   <div class="title">Registration</div>
   <div class="content">
-    <form name="myForm" th:action="@{|/users/create/continue/${user.getId()}|}" th:object="${user}" enctype="multipart/form-data" method="POST">
+    <form name="myForm" th:action="@{|/users/create/continue/${user.getUsername()}/|}" th:object="${user}" enctype="multipart/form-data" method="POST">
       <div class="user-details">
 
         <input hidden type="number" th:field="*{id}" id="id" th:value="*{id}"/>
+<!--        <input hidden type="text" th:field="*{firstName}" id="firstName" th:value="*{firstName}"/>-->
 
         <div class="input-box">
           <span class="details">Age</span>
@@ -266,9 +267,6 @@
           <span class="details">Country</span>
           <input type="text" th:field="*{country}">
         </div>
-
-
-
         <div class="gender-details">
           <input type="radio" name="gender" id="dot-1">
           <input type="radio" name="gender" id="dot-2">

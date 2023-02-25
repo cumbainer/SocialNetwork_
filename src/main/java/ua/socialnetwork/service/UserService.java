@@ -14,11 +14,12 @@ public interface UserService {
 
     User create(UserDto user, MultipartFile userImage, MultipartFile imageBackground);
 
-    User update(UserDto user, MultipartFile userImage);
+    User update(User user, MultipartFile userImage);
 
-    User update(UserDto user);
+    User update(User user);
 
-    User update(UserDto user, MultipartFile userImage, MultipartFile imageBackground);
+    User update(User user, MultipartFile userImage, MultipartFile imageBackground);
+    User returnUserByUsername(String username);
 
     void delete(int id);
 

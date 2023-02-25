@@ -26,16 +26,14 @@ public class PostServiceImpl implements PostService {
     private ModelMapper modelMapper;
 
     @Override
-    public Post create(PostDto postDto) {
-        Post post = modelMapper.map(postDto, Post.class);
+    public Post create(Post post) {
         return postRepo.save(post);
     }
 
     @Override
-    public Post create(PostDto postDto, MultipartFile postImage) {
+    public Post create(Post post, MultipartFile postImage) {
         PostImage image;
 
-        Post post = modelMapper.map(postDto, Post.class);
 
         if (postImage.getSize() != 0) {
             image = toImageEntity(postImage);
@@ -62,6 +60,12 @@ public class PostServiceImpl implements PostService {
 
         post.setEditionDate(LocalDateTime.now());
         return postRepo.save(post);
+    }
+
+    @Override
+    public Post returnPostEntityById(Integer postId) {
+        return postRepo.findById(postId).orElseThrow(
+                () -> new EntityNotFoundException("Post with id: " + postId + "has not been found"));
     }
 
     @Override
@@ -108,7 +112,7 @@ public class PostServiceImpl implements PostService {
     }
 
     //Needed to put like/dislike on a post
-    public void makeReaction(PostDto postDto, PostAction action) {
+    public void makeReaction(Post postDto, PostAction action) {
 
         int likeCounter = postDto.getLikeCounter();
         int dislikeCounter = postDto.getDislikeCounter();

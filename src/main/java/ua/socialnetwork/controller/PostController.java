@@ -3,6 +3,7 @@ package ua.socialnetwork.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -40,12 +41,12 @@ public class PostController {
 
     @PreAuthorize("hasRole('ROLE_ADMIM') or authentication.principal.username == #username")
     @PostMapping("/new/{username}/")
-    public String create(@PathVariable("username") String username, PostDto postDto,
+    public String create(@PathVariable("username") String username, Post post,
                          @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
 
-        postDto.setUser(userService.readByUsername(username));
+        post.setUser(userService.returnUserByUsername(username));
 
-        postService.create(postDto, postImage);
+        postService.create(post, postImage);
         return "redirect:/feed";
     }
 
@@ -62,10 +63,7 @@ public class PostController {
     @PostMapping("/update/")
     public String edit(PostDto postDto, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
 
-        if (result.hasErrors()) {
-            log.warn("Binding result had an error in Post Controller update with post, id: " + postDto.getId());
-            return "update-post";
-        }
+        if (result.hasErrors()) return "update-post";
 
         postDto.setEditionDate(LocalDateTime.now());
         postService.update(postDto, postImage);
@@ -77,30 +75,26 @@ public class PostController {
     @GetMapping("/{post_id}/delete/")
     public String delete(@PathVariable("post_id") Integer postId, @AuthenticationPrincipal SecurityUser authUser) {
 
-        String username = authUser.getUsername();
-
         postService.delete(postId);
 
-        return "redirect:/users/" + username;
+        return "redirect:/users/" + authUser.getUsername();
     }
 
     @GetMapping("/{post_id}/like/")
-    public String like(@PathVariable("post_id") Integer post_id) {
+    public String like(@PathVariable("post_id") Integer postId) {
+        Post post = postService.returnPostEntityById(postId);
 
-        PostDto postDto = postService.readById(post_id);
-
-        postService.makeReaction(postDto, PostAction.LIKE);
-        postService.create(postDto);
+        postService.makeReaction(post, PostAction.LIKE);
+        postService.create(post);
         return "redirect:/feed";
     }
 
     @GetMapping("/{post_id}/dislike/")
-    public String dislike(@PathVariable("post_id") Integer post_id) {
+    public String dislike(@PathVariable("post_id") Integer postId) {
+        Post post = postService.returnPostEntityById(postId);
 
-        PostDto postDto = postService.readById(post_id);
-
-        postService.makeReaction(postDto, PostAction.DISLIKE);
-        postService.create(postDto);
+        postService.makeReaction(post, PostAction.DISLIKE);
+        postService.create(post);
         return "redirect:/feed";
     }
 

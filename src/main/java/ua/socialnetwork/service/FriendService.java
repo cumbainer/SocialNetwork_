@@ -5,7 +5,8 @@ import ua.socialnetwork.entity.Friend;
 
 public interface FriendService {
 
-    Friend create(FriendDto friendDto, int senderId, int receiverId);
+//    Friend create(Friend friendDto, int senderId, int receiverId);
+    Friend create(FriendDto friendDto, String senderUsername, String receiverUsername);
 
     void removeFromFriends(int friendEntityId);
 

@@ -8,11 +8,12 @@ import ua.socialnetwork.entity.enums.PostAction;
 import java.util.List;
 
 public interface PostService {
-    Post create(PostDto postDto);
+    Post create(Post post);
 
-    Post create(PostDto postDto, MultipartFile postImage);
+    Post create(Post postDto, MultipartFile postImage);
 
     Post update(PostDto postDto, MultipartFile multipartFile);
+    Post returnPostEntityById(Integer postId);
 
     void delete(int id);
 
@@ -22,5 +23,5 @@ public interface PostService {
 
     List<PostDto> getAll();
 
-    void makeReaction(PostDto post, PostAction action);
+    void makeReaction(Post post, PostAction action);
 }

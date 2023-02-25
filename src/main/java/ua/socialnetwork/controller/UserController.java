@@ -3,6 +3,7 @@ package ua.socialnetwork.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class UserController {
     private final UserService userService;
     private final PostService postService;
     private final FriendService friendService;
+    private final ModelMapper modelMapper;
 
 
     @GetMapping("/create")
@@ -39,13 +41,10 @@ public class UserController {
 
     @PostMapping("/create")
     public String create(@Validated @ModelAttribute("user") UserDto userDto, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "create-user";
-        }
+        if (result.hasErrors()) return "create-user";
 
         try {
             userService.create(userDto);
-
         } catch (UserAlreadyExistsException ex) {
             log.warn("UserAlreadyExistsException is caught in UserController with mesasge: " + ex.getMessage() + " and" +
                     "cause " + ex.getCause());
@@ -53,7 +52,7 @@ public class UserController {
             return "login-page";
         }
 
-        return "redirect:/users/create/continue/" + userDto.getId();
+        return "redirect:/users/create/continue/" + userDto.getUsername();
     }
 
     @GetMapping("/{user_id}/update/")
@@ -64,47 +63,47 @@ public class UserController {
         return "update-user";
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #userDto.id")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == #user.id")
     @PostMapping("/update")
-    public String update(@Validated UserDto userDto, @RequestParam(value = "userImage", required = false) MultipartFile userImage,
+    public String update(@Validated User user, @RequestParam(value = "userImage", required = false) MultipartFile userImage,
                          BindingResult result) {
-        if (result.hasErrors()) {
-            log.warn("Binding result had an error in User Controller update with user: " + userDto.getUsername());
-            return "update-user";
-        }
-        userService.update(userDto, userImage);
+
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+
+        if (result.hasErrors()) return "update-user";
+
+        userService.update(user, userImage);
         log.info("User with id: " + userDto.getId() + " has been updated");
         return "redirect:/users/" + userDto.getUsername();
     }
 
 
-    @GetMapping("/create/continue/{user_id}")
-    public String createSecondaryInfoForm(@PathVariable("user_id") Integer user_id, Model model) {
+    @GetMapping("/create/continue/{username}")
+    public String createSecondaryInfoForm(@PathVariable("username") String username, Model model) {
 
-        model.addAttribute("user", userService.readById(user_id));
+        User user = modelMapper.map(userService.readByUsername(username), User.class);
+
+        model.addAttribute("user", user);
 
         return "create-secondaryInfo";
     }
 
-    @PostMapping("/create/continue/{user_id}")
-    public String createSecondaryInfo(@PathVariable("user_id") Integer id, @Validated UserDto userDto,
+    @PostMapping("/create/continue/{username}/")
+    public String createSecondaryInfo(@PathVariable("username") String username, @Validated User user,
                                       @RequestParam(value = "userImage", required = false) MultipartFile userImage,
                                       @RequestParam(value = "imageBackground", required = false) MultipartFile imageBackground,
                                       BindingResult result) {
 
-        if (result.hasErrors()) {
+        if (result.hasErrors()) return "create-secondaryInfo";
 
-            return "create-secondaryInfo";
-        }
+        UserDto oldUser = userService.readByUsername(username);
 
-        UserDto oldUser = userService.readById(id);
+        user.setFirstName(oldUser.getFirstName());
+        user.setLastName(oldUser.getLastName());
+        user.setUsername(oldUser.getUsername());
+        user.setEmail(oldUser.getEmail());
 
-        userDto.setFirstName(oldUser.getFirstName());
-        userDto.setLastName(oldUser.getLastName());
-        userDto.setUsername(oldUser.getUsername());
-        userDto.setEmail(oldUser.getEmail());
-
-        userService.update(oldUser, userImage, imageBackground);
+        userService.update(user, userImage, imageBackground);
 
         return "redirect:/login";
     }

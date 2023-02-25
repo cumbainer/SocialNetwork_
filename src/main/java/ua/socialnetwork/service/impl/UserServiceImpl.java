@@ -31,7 +31,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserDto userDto) {
-
         User user = modelMapper.map(userDto, User.class);
 
         if (ifUsernameExists(user.getUsername())) {
@@ -95,14 +94,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(UserDto userDto, MultipartFile userImage) {
-        User user = modelMapper.map(userDto, User.class);
+    public User update(User user, MultipartFile userImage) {
         UserImage image;
 
         if (user != null) {
             if (userImage.getSize() != 0) {
                 image = toImageEntity(userImage);
-                user.setBackgroundImageToUser(image);
+                user.setProfileImageToUser(image);
             }
 
             user.setRole(UserRole.USER);
@@ -115,10 +113,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(UserDto userDto) {
+    public User update(User user) {
 
-        if (userDto != null) {
-            User user = modelMapper.map(userDto, User.class);
+        if (user != null) {
             user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
             user.setEditionDate(LocalDateTime.now());
@@ -129,8 +126,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(UserDto userDto, MultipartFile userImage, MultipartFile imageBackground) {
-        User user = modelMapper.map(userDto, User.class);
+    public User update(User user, MultipartFile userImage, MultipartFile imageBackground) {
 
         UserImage image;
         UserImage image2;
@@ -153,6 +149,12 @@ public class UserServiceImpl implements UserService {
             return userRepo.save(user);
         }
         throw new NullEntityReferenceException("User can not be null");
+    }
+
+    @Override
+    public User returnUserByUsername(String username) {
+        return userRepo.findUserByUsername(username).orElseThrow(() ->
+                new EntityNotFoundException("User with username: " + username + "not found"));
     }
 
     @Override

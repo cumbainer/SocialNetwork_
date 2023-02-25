@@ -72,7 +72,7 @@
                 <span class="profile"></span>
                 <div class="profile-pic" th:if="${#authentication.principal.username != null}">
 
-                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ><img th:if="${imageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
+                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${imageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
                     <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${imageIsPresent == false}" class="button-profile" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>
 
                 </div>

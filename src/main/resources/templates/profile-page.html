@@ -63,7 +63,7 @@
         <div id="profile-upper">
             <div id="profile-banner-image">
                 <img th:if="${user.images.size() >= 2 and user.images.get(1).getName() == 'userImage'}" src="https://wallpapers.com/images/hd/hd-country-life-at-night-vvxmbqzkr4uumuni.jpg">
-                <img th:if="${user.images.size() >= 2 and user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${image.get(1).getId()}|}">
+                <img th:if="${user.images.size() >= 2 and user.images.get(1).getName() == 'imageBackground'}" th:src="@{|/images/${image.get(1).getId()}|}">
                 <img th:if="${user.images.size() == 1 || user.images.size() == 0 }" src="https://wallpapers.com/images/hd/hd-country-life-at-night-vvxmbqzkr4uumuni.jpg">
             </div>
 

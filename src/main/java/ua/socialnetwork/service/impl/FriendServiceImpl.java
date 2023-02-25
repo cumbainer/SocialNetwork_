@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ua.socialnetwork.dto.FriendDto;
 import ua.socialnetwork.dto.UserDto;
 import ua.socialnetwork.entity.Friend;
+import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.enums.FriendStatus;
 import ua.socialnetwork.repo.FriendRepo;
 import ua.socialnetwork.service.FriendService;
@@ -24,13 +25,14 @@ public class FriendServiceImpl implements FriendService {
     private ModelMapper modelMapper;
 
     @Override
-    public Friend create(FriendDto friendDto, int senderId, int receiverId) {
-        ///will in work or not
-        UserDto receiver = userService.readById(receiverId);
-        UserDto sender = userService.readById(senderId);
-
+    public Friend create(FriendDto friendDto, String senderUsername, String receiverUsername) {
         Friend friend = modelMapper.map(friendDto, Friend.class);
 
+        User sender = userService.returnUserByUsername(senderUsername);
+        User receiver = userService.returnUserByUsername(receiverUsername);
+
+        friend.setSender(sender);
+        friend.setReceiver(receiver);
 
         receiver.getReceivedRequests().add(friend);
         sender.getSentRequest().add(friend);
