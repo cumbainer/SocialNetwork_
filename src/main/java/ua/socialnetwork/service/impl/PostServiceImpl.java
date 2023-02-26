@@ -7,14 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ua.socialnetwork.entity.Post;
-import ua.socialnetwork.entity.PostImage;
+import ua.socialnetwork.entity.*;
 import ua.socialnetwork.entity.enums.PostAction;
+import ua.socialnetwork.repo.CommentReactionRepo;
+import ua.socialnetwork.repo.CommentRepository;
 import ua.socialnetwork.repo.PostRepo;
 import ua.socialnetwork.service.PostService;
 
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +27,10 @@ public class PostServiceImpl implements PostService {
 
     private PostRepo postRepo;
 
+    private CommentRepository commentRepository;
+
+    private CommentReactionRepo commentReactionRepo;
+
     @Override
     public Post create(Post post) {
         //TODO make validations and exc handler
@@ -32,6 +39,7 @@ public class PostServiceImpl implements PostService {
 //        post.setCreationDate(LocalDateTime.now());
         return postRepo.save(post);
     }
+
     @Override
     public Post create(Post post, MultipartFile postImage) {
         PostImage image;
@@ -63,7 +71,6 @@ public class PostServiceImpl implements PostService {
         }
 
 
-
         post.setEditionDate(LocalDateTime.now());
         return postRepo.save(post);
     }
@@ -72,9 +79,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post readById(int id) {
         log.info("A post with id: " + id + " was read in PostServiceImpl");
-        return postRepo.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Post with id: " + id + "has not been found"));
+        return postRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Post with id: " + id + "has not been found"));
     }
+
     @Override
     public void delete(int id) {
 
@@ -95,7 +102,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPostsByUser_Username(String username){
+    public List<Post> getPostsByUser_Username(String username) {
         List<Post> posts = postRepo.getPostsByUser_Username(username, Sort.by(Sort.Direction.DESC, "id"));
         return posts;
 
@@ -111,7 +118,8 @@ public class PostServiceImpl implements PostService {
         image.setBytes(postImage.getBytes());
         return image;
     }
-    public void makeReaction(Post post, PostAction action){
+
+    public void makeReaction(Post post, PostAction action) {
         int likeCounter = post.getLikeCounter();
         int dislikeCounter = post.getDislikeCounter();
 
@@ -141,6 +149,56 @@ public class PostServiceImpl implements PostService {
                 log.info("Post with id: " + post.getId() + " is disliked");
             }
         }
+    }
 
+    public List postPreparation(User user) {
+        List<Object> dataPosts = new ArrayList<>();
+
+        int likeSum;
+        int dislikeSum;
+        boolean isLike;
+        boolean isDislike;
+
+        List<Post> posts = postRepo.findAll();
+        for (Post post : posts) {
+            List<Object> itemPost = new ArrayList<>();
+            List<Object> itemComments = new ArrayList<>();
+            itemPost.add(0, post);
+
+            List<Comment> comments = commentRepository.findAllByPostId((int) post.getId());
+            for (Comment comment : comments) {
+                List<Object> itemComment = new ArrayList<>();
+                itemComment.add(0, comment);
+
+                likeSum = 0;
+                dislikeSum = 0;
+                isLike = false;
+                isDislike = false;
+
+                List<CommentReactions> reactions = commentReactionRepo.findAllByCommentId((int) comment.getId());
+                for (CommentReactions reaction : reactions) {
+                    if (reaction.getReaction() == true) {
+                        likeSum++;
+                    } else {
+                        dislikeSum++;
+                    }
+                    if (reaction.getUser().getId() == user.getId()) {
+                        if (reaction.getReaction() == true) {
+                            isLike = true;
+                        } else {
+                            isDislike = true;
+                        }
+                    }
+                }
+                itemComment.add(1, likeSum);
+                itemComment.add(2, dislikeSum);
+                itemComment.add(3, isLike);
+                itemComment.add(4, isDislike);
+                itemComments.add(itemComment);
+            }
+            itemPost.add(1, itemComments);
+            dataPosts.add(0, itemPost);
+        }
+        return dataPosts;
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.repo.UserRepo;
 import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.entity.enums.PostAction;
@@ -26,6 +27,8 @@ public class PostController {
     private final UserService userService;
     private final PostService postService;
 
+    private final UserRepo userRepo;
+
 
     @GetMapping("/feed")
     public String getAll(Model model){
@@ -34,17 +37,16 @@ public class PostController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         //ToDO put in try catch
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
+        SecurityUser user = (SecurityUser) authentication.getPrincipal();
 
-        if(u.getImages().size() > 0){
+        if(user.getImages().size() > 0){
             ifImageIsPresent = true;
         }
 
         model.addAttribute("ifImageIsPresent", ifImageIsPresent);
-        model.addAttribute("posts", postService.getAll());
         model.addAttribute("newPost", new Post());
         model.addAttribute("users", userService.getAll());
-
+        model.addAttribute("posts", postService.postPreparation(userRepo.getById((int) user.getId())));
         model.addAttribute("auth", authentication);
 
         return "feed";
@@ -101,9 +103,6 @@ public class PostController {
         return "redirect:/users/"+username;
     }
 
-
-
-
     @GetMapping("/like/{post_id}")
     public String like(@PathVariable("post_id") Integer post_id, Model model){
 
@@ -122,8 +121,6 @@ public class PostController {
         return "redirect:/feed";
     }
 
-
-
     @GetMapping("/dislike/{post_id}")
     public String dislike(@PathVariable("post_id") Integer post_id, Model model){
 
@@ -134,9 +131,5 @@ public class PostController {
         postService.create(post);
         return "redirect:/feed";
     }
-
-
-
-
 
 }

@@ -32,6 +32,10 @@ public class SecurityUser implements UserDetails {
         return user.getPassword();
     }
 
+    public long getId(){
+        return user.getId();
+    }
+
     @Override
     public String getUsername() {
         return user.getUsername();

@@ -17,7 +17,7 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
-    private int id;
+    private long id;
 
     @Column(name = "title")
     private String title;
@@ -26,8 +26,6 @@ public class Post {
     private String body;
 
     //TODO make like/dislike attached to an user
-
-
 
     @Column(name = "liked")
     private boolean liked;
@@ -57,7 +55,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
-
     @OneToOne(cascade = CascadeType.ALL)
     private PostImage image;
 

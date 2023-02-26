@@ -119,12 +119,6 @@ public class UserController {
 
         return "redirect:/login";
     }
-    @GetMapping("/search")
-    public String getAll(Model model){
-        model.addAttribute("users", userService.getAll());
-        return "Searchbar";
-    }
-
     @GetMapping("/{username}")
     public String getUser(@PathVariable("username") String username, Model model){
         User user = userService.readByUsername(username);
@@ -144,10 +138,8 @@ public class UserController {
 
         model.addAttribute("user", user);
         model.addAttribute("image", user.getImages());
-
+        model.addAttribute("users", userService.getAll());
         model.addAttribute("size", user.getImages().size());
         return "profile-page";
     }
-
-
 }

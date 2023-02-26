@@ -1,19 +1,17 @@
 package ua.socialnetwork.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Data
-//@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "comment")
 public class Comment {
-
-    public Long getId() {
-        return id;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,26 +25,14 @@ public class Comment {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "liked")
-    private boolean liked;
-
-    @Column(name = "disliked")
-    private boolean disliked;
-
     @Column(name = "createdDate")
     private LocalDateTime createdDate;
-
-    @Column(name = "editedDate")
-    private LocalDateTime editedDate;
-
-    @Column(name = "deletedDate")
-    private LocalDateTime deletedDate;
-
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+
+    @OneToMany(mappedBy = "comment")
+    private List<CommentReactions> reactions;
+
 }

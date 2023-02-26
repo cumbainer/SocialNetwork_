@@ -1,19 +1,20 @@
 package ua.socialnetwork.controller;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.nimbusds.jose.shaded.json.JSONArray;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ua.socialnetwork.entity.Comment;
-import ua.socialnetwork.repo.CommentRepository;
+import ua.socialnetwork.entity.Post;
+import ua.socialnetwork.entity.User;
+import ua.socialnetwork.repo.UserRepo;
+import ua.socialnetwork.service.CommentService;
 import ua.socialnetwork.service.PostService;
-import ua.socialnetwork.service.impl.CommentServiceImpl;
-import ua.socialnetwork.service.impl.UserServiceImpl;
-
-
+import ua.socialnetwork.service.UserService;
+import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -21,48 +22,10 @@ import java.util.List;
 @RequestMapping("/comment")
 @Slf4j
 public class CommentsController {
-
-    private final CommentServiceImpl commentService;
+    private final UserRepo userRepo;
+    private final CommentService commentService;
     private final PostService postService;
-    private CommentRepository commentRepository;
-    private UserServiceImpl userService;
-
-    @GetMapping("/add/{post_id}")
-    public String createComment(@PathVariable("post_id") long post_id, Model model) {
-        model.addAttribute("comment", new Comment());
-        model.addAttribute("postId", post_id);
-        return "create-comment";
-    }
-
-    @PostMapping("/add/{post_id}")
-    public String create(@PathVariable("post_id") int post_id,
-                         @Validated @ModelAttribute("comment") Comment comment) {
-        try {
-            comment.setPost(postService.readById(post_id));
-            commentService.create(comment);
-        }catch (EntityNotFoundException e){
-            throw new EntityNotFoundException("Exception");
-        }
-        log.info("Comment with id:" + comment.getId() + " was created");
-        return "redirect:/posts";
-    }
-
-    @GetMapping("/liked/{comment_id}")
-    public String like(@PathVariable("comment_id") long comment_id, Comment comment){
-        comment= (Comment) commentRepository.findCommentById(comment_id);
-        comment.setLiked(true);
-        commentRepository.save(comment);
-        return "redirect:/comment/all/" + comment.getPost().getId();
-    }
-
-    @GetMapping("/disliked/{comment_id}")
-    public String disLike(@PathVariable("comment_id") long comment_id, Comment comment){
-        comment = (Comment) commentRepository.findCommentById(comment_id);
-        comment.setDisliked(true);
-        commentRepository.save(comment);
-        return "redirect:/comment/all/" + comment.getPost().getId();
-    }
-
+    private UserService userService;
 
     @GetMapping("/all/{post_id}")
     public String getAll (@PathVariable("post_id") int post_id, Model model){
@@ -73,5 +36,25 @@ public class CommentsController {
 
         log.info("Comments have been reading");
         return "post-comments";
+    }
+
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public JSONArray createComment(@RequestParam("comment") String text, @RequestParam("post_id") int post_id, Principal principal){
+
+        JSONArray array = new JSONArray();
+        Post post = postService.readById(post_id);
+        Comment comment = new Comment();
+        comment.setPost(post);
+        User user = userRepo.getUserByUsername(principal.getName());
+        comment.setCreatedBy(user);
+        comment.setCreatedDate(LocalDateTime.now());
+        comment.setText(text);
+
+        commentService.create(comment);
+        array.add(comment.getId());
+        array.add(user.getFirstName() + " " + user.getLastName());
+        return array;
     }
 }

@@ -26,7 +26,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int id;
+    private long id;
 
     @Column(name = "firstName", nullable = false)
 
@@ -79,6 +79,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Friend> friends;
+
+    @OneToMany(mappedBy = "user")
+    private List<CommentReactions> reactions;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
             mappedBy = "user")

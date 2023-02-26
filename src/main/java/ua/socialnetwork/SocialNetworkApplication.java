@@ -14,8 +14,6 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 public class SocialNetworkApplication {
-
-
     public static void main(String[] args) {
         SpringApplication.run(SocialNetworkApplication.class, args);
     }
