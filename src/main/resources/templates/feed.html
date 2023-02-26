@@ -165,36 +165,36 @@
         <div class="post" th:each="post, iter : ${posts}">
             <div class="post-top">
                 <div class="dp">
-                    <!--                    <a th:href="@{|/users/${post.getUser().getUsername()}|}">-->
+                    <!--                    <a th:href="@{|/users/${post[0].getUser().getUsername()}|}">-->
                     <img th:if="${ifImageIsPresent == true}"
-                         th:src="@{|/images/${post.getUser().getImages().get(0).getId()}|}" alt="">
+                         th:src="@{|/images/${post[0].getUser().getImages().get(0).getId()}|}" alt="">
                     <img th:if="${ifImageIsPresent == false}"
                          src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="">
                     <!--                    </a>-->
                 </div>
                 <div class="post-info">
-                    <a class="underline" th:href="@{|/users/${post.getUser().getUsername()}|}"
+                    <a class="underline" th:href="@{|/users/${post[0].getUser().getUsername()}|}"
                        style="text-decoration: #0e0e0e">
                         <p class="name"
-                           th:text="${post.getUser().getFirstName() + ' ' +  post.getUser().getLastName()}"></p>
+                           th:text="${post[0].getUser().getFirstName() + ' ' +  post[0].getUser().getLastName()}"></p>
                     </a>
                     <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
-                    <span class="time" th:text="${post.getCreationDate()}"
+                    <span class="time" th:text="${post[0].getCreationDate()}"
                           style="position:relative; top: -20px;"></span>
 
                 </div>
 
-                <a th:href="@{|/posts/update/${post.id}|}" style="position: relative;left: 291px"><i
+                <a th:href="@{|/posts/update/${post[0].id}|}" style="position: relative;left: 291px"><i
                         class="fas fa-edit"></i></a>
             </div>
 
             <div class="post-content">
-                <div th:text="${post.body}"></div>
+                <div th:text="${post[0].body}"></div>
 
-                <div id="post-image" th:if="${post.getImage() != null}">
-                    <a th:href="'http://localhost:2402/post/images/' + ${post.getImage().id}" target="_blank">
-                        <img th:src="@{|/post/images/${post.getImage().id}|}"/>
-                        <img th:if="${post.getImage() == null}"/>
+                <div id="post-image" th:if="${post[0].getImage() != null}">
+                    <a th:href="'http://localhost:2402/post/images/' + ${post[0].getImage().id}" target="_blank">
+                        <img th:src="@{|/post/images/${post[0].getImage().id}|}"/>
+                        <img th:if="${post[0].getImage() == null}"/>
                     </a>
                 </div>
 
@@ -204,19 +204,19 @@
             <div class="post-bottom">
 
                 <button class="like__btn">
-                    <span id="count" th:text="${post.likeCounter}"></span>
-                    <span id="icon" th:if="${post.liked}"><i class="fas fa-thumbs-up"></i></span>
-                    <a th:href="@{|/posts/like/${post.id}|}" th:unless="${post.liked}"><i class="far fa-thumbs-up"></i></a>
+                    <span id="count" th:text="${post[0].likeCounter}"></span>
+                    <span id="icon" th:if="${post[0].liked}"><i class="fas fa-thumbs-up"></i></span>
+                    <a th:href="@{|/posts/like/${post[0].id}|}" th:unless="${post[0].liked}"><i
+                            class="far fa-thumbs-up"></i></a>
                 </button>
                 <button class="like__btn-2">
-                    <span id="count-2" th:text="${post.dislikeCounter}"></span>
-                    <span id="icon-2" th:if="${post.disliked}"><i class="fas fa-thumbs-down"></i></span>
-                    <a th:href="@{|/posts/dislike/${post.id}|}" th:unless="${post.disliked}"><i
+                    <span id="count-2" th:text="${post[0].dislikeCounter}"></span>
+                    <span id="icon-2" th:if="${post[0].disliked}"><i class="fas fa-thumbs-down"></i></span>
+                    <a th:href="@{|/posts/dislike/${post[0].id}|}" th:unless="${post[0].disliked}"><i
                             class="far fa-thumbs-down"></i></a>
                 </button>
 
                 <div class="">
-                    <!--                    <i class="far fa-comment"></i>-->
                     <a href="#" class="btn btn-outline-secondary text-none-decoration btn-comment border-0"><i
                             class="far fa-comment"></i> Comment</a>
                 </div>
@@ -225,21 +225,36 @@
             <div class="card mt-3 d-none card-comment">
                 <div class="card-header">
                     <textarea class="w-100 my-2" rows="1" placeholder="Write your comment..."></textarea>
-                    <button class="btn btn-outline-success btn-comment-save" th:attr="data-post-id=${post.getId()}">Add
-                        comment
+                    <button class="btn btn-outline-success btn-comment-save" th:attr="data-post-id=${post[0].getId()}">
+                        Add comment
                     </button>
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item" th:each="comment, iter : ${post.comments}">
+                        <li class="list-group-item" th:each="comment, iter : ${post[1]}">
                             <i>
                                 <small>
                                     <small class="opacity-75"
-                                           th:text="${comment.createdBy.firstName} + ' ' + ${comment.createdBy.lastName}"></small>
+                                           th:text="${comment[0].createdBy.firstName} + ' ' + ${comment[0].createdBy.lastName}"></small>
                                 </small>
                             </i>
                             <br>
-                            <span th:text="${comment.text}"></span>
+                            <span th:text="${comment[0].text}"></span>
+                            <div class="btn-toolbar">
+
+                                <div class="btn-group me-2" role="group" aria-label="Second group"
+                                     th:attr="data-comment-id=${comment[0].getId()}">
+                                    <button type="button" class="btn btn-comment-reaction"
+                                            th:attr="data-reaction=${comment[3]}"><i
+                                            th:class="${comment[3] ? 'fas text-primary' : 'far'} + ' fa-thumbs-up'"></i>
+                                        <span class="like-counter" th:text="${comment[1] > 0 ? comment[1] : ''}"></span>
+                                    </button>
+                                    <button type="button" class="btn btn-comment-reaction"
+                                            th:attr="data-reaction=${comment[4]}"><i
+                                            th:class="${comment[4] ? 'fas text-primary' : 'far'} + ' fa-thumbs-down'"></i>
+                                        <span class="dislike-counter" th:text="${comment[2] > 0 ? comment[2] : ''}"></span></button>
+                                </div>
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -323,7 +338,8 @@
 
 </div>
 
-<div th:replace="feed-js"></div>
+
+<script src="/js/script.js"></script>
 
 </body>
 

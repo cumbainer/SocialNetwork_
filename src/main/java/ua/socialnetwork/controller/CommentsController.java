@@ -12,9 +12,7 @@ import ua.socialnetwork.entity.User;
 import ua.socialnetwork.repo.UserRepo;
 import ua.socialnetwork.service.CommentService;
 import ua.socialnetwork.service.PostService;
-import ua.socialnetwork.service.impl.UserServiceImpl;
-
-
+import ua.socialnetwork.service.UserService;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +25,7 @@ public class CommentsController {
     private final UserRepo userRepo;
     private final CommentService commentService;
     private final PostService postService;
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @GetMapping("/all/{post_id}")
     public String getAll (@PathVariable("post_id") int post_id, Model model){
@@ -55,7 +53,7 @@ public class CommentsController {
         comment.setText(text);
 
         commentService.create(comment);
-        array.add( comment.getId());
+        array.add(comment.getId());
         array.add(user.getFirstName() + " " + user.getLastName());
         return array;
     }

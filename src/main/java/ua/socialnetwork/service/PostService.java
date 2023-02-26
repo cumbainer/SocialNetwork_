@@ -1,6 +1,7 @@
 package ua.socialnetwork.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.enums.PostAction;
 import ua.socialnetwork.entity.Post;
 
@@ -23,5 +24,5 @@ public interface PostService {
     List<Post> getByUserId(int userId);
     void makeReaction(Post post, PostAction action);
 
-
+    List<Object> postPreparation(User user);
 }

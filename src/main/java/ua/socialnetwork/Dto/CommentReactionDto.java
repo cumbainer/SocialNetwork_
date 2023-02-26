@@ -5,13 +5,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CommentDto{
+public class CommentReactionDto {
 
-    private int post_id;
+    private int reaction_id;
 
-    private String text;
+    private boolean reaction;
 
-    private Boolean reaction;
+    private int user_id;
 
     private int comment_id;
 }
