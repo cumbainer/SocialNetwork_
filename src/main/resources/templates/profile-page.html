@@ -69,12 +69,12 @@
 
             <div id="profile-d" >
 
-                <div id="profile-pic" >
-                    <img th:if="${user.images.size() == 1 and user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${image.get(0).getId()}|}">
-                    <img th:if="${user.images.size() == 2 and user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${image.get(1).getId()}|}">
-                    <img th:if="${user.images.size() == 2}" th:src="@{|/images/${image.get(1).getId()}|}">
-                    <img th:if="${user.images.size()  >=  3 }" th:src="@{|/images/${image.get(image.size() - 1).getId()}|}">
-                    <img th:if="${user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                <div id="profile-pic">
+                    <img class="image-for-profile" th:if="${user.images.size() == 1 and user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${image.get(0).getId()}|}">
+                    <img class="image-for-profile" th:if="${user.images.size() == 2 and user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${image.get(1).getId()}|}">
+                    <img class="image-for-profile" th:if="${user.images.size() == 2}" th:src="@{|/images/${image.get(1).getId()}|}">
+                    <img class="image-for-profile" th:if="${user.images.size()  >=  3 }" th:src="@{|/images/${image.get(image.size() - 1).getId()}|}">
+                    <img class="image-for-profile" th:if="${user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
                 </div>
 
     <!--            ToDo add if image is not present -> add custom image, like 'unavailable"-->
@@ -88,14 +88,9 @@
                 <div class="td" id="l-col" th:switch="${username == #authentication.principal.username}">
                         <button  th:if="${!ifFriend and !isAccount }" class="button-44" role="button" ><a style="text-decoration: none; color: white" th:href="@{|/friend/${#authentication.principal.username}/add/${user.username}|}">Add friend</a></button>
                         <button  th:if="${ifFriend and !isAccount}" class="button-44" role="button" style="color: white; background: #7f8fa6" disabled>A friend</button>
-    <!--                    <button  th:if="${isAccount}" class="button-44" role="button" style="color: white; background: #7f8fa6" disabled>GET THE FUCK OUT OF HERE</button>-->
-                        <button class="button-44" role="button">Write Msg</button>
-                    <br><br>
                         <div>
-                            <button class="button-44" role="button">Follow</button>
                             <button th:case="true" class="button-44" role="button"><a th:href="@{|/users/${user.getId()}/update/|}" style="color: white; text-decoration: none">Update user</a></button>
                         </div>
-
                    <p th:text="${user.getEmail()}"></p>
                    <p th:text="${user.getCountry()}"></p>
                    <p th:if="${user.getAge() != 0}" th:text="${user.getAge() + ' years'}"></p>
@@ -120,9 +115,9 @@
                             <div class="post-top" th:switch="${post.getUser().username == #authentication.principal.username}">
                                 <div class="dp">
                                     <a th:href="@{|/users/${post.getUser().getUsername()}|}">
-                                        <img th:if="${post.user.images.size()  ==  0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
-                                        <img th:if="${post.user.images.size()  ==  1 or post.user.images.size()  ==  2 }" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
-                                        <img th:if="${post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
+                                        <img class="dp-profile-round-pic" th:if="${post.user.images.size()  ==  0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                                        <img class="dp-profile-round-pic" th:if="${post.user.images.size()  ==  1 or post.user.images.size()  ==  2 }" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
+                                        <img class="dp-profile-round-pic" th:if="${post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
                                     </a>
                                 </div>
                                 <div class="post-info">

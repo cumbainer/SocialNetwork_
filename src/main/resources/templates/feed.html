@@ -82,14 +82,14 @@
                 <i class="fa fa-user-friends"></i>
                 <p>Friends</p>
             </li>
-            <li>
-                <i class="fa fa-play-circle"></i>
-                <p>Videos</p>
-            </li>
-            <li>
-                <i class="fa fa-flag"></i>
-                <p>Pages</p>
-            </li>
+<!--            <li>-->
+<!--                <i class="fa fa-play-circle"></i>-->
+<!--                <p>Videos</p>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <i class="fa fa-flag"></i>-->
+<!--                <p>Pages</p>-->
+<!--            </li>-->
             <li>
                 <i class="fa fa-users"></i>
                 <p>Groups</p>
@@ -102,18 +102,7 @@
                 <i class="fab fa-facebook-messenger"></i>
                 <p>Inbox</p>
             </li>
-            <li>
-                <i class="fas fa-calendar-week"></i>
-                <p>Events</p>
-            </li>
-            <li>
-                <i class="fas fa-hands-helping"></i>
-                <p>Offers</p>
-            </li>
-            <li>
-                <i class="fas fa-briefcase"></i>
-                <p>Jobs</p>
-            </li>
+
             <li>
                 <i class="fa fa-star"></i>
                 <p>Favourites</p>
@@ -132,13 +121,12 @@
     <div class="middle-panel">
 
 
-
         <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}" th:action="@{|/posts/new/${#authentication.principal.username}/|}" th:object="${newPost}"  method="post">
             <div class="post create">
                 <div class="post-top">
                     <div class="dp">
-                        <img th:if="${imageIsPresent == true}" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" >
-                        <img th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
+                        <img class="dp-profile-round-pic" th:if="${imageIsPresent == true}" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" >
+                        <img class="dp-profile-round-pic" th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
                     </div>
                     <input type="text" th:placeholder="${'What is on your mind, ' + #authentication.principal.firstName + '?' }"
                         th:field="*{body}"/>
@@ -147,9 +135,10 @@
                 <div class="post-bottom">
 
                     <div class="upload">
+                        <div id="img-preview"></div>
                         <button type = "button" class = "btn-warning">
                             <i class = "fa fa-upload"></i> Upload File
-                            <input type="file" name="postImage">
+                            <input id="choose-file" type="file" name="postImage" accept="image/png, image/gif, image/jpeg">
                         </button>
                     </div>
 
@@ -165,11 +154,11 @@
         <div class="post" th:each="post, iter : ${posts}">
             <div class="post-top" th:switch="${post.getUser().getUsername() == #authentication.principal.username}">
                 <div class="dp">
-                    <img th:if="${post.user.images.size() == 1 and post.user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
-                    <img th:if="${post.user.images.size() == 2 and post.user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${post.user.images.get(1).getId()}|}">
-                    <img th:if="${post.user.images.size() == 2}" th:src="@{|/images/${post.user.images.get(1).getId()}|}">
-                    <img th:if="${post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
-                    <img th:if="${post.user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+                    <img class="dp-profile-round-pic" th:if="${post.user.images.size() == 1 and post.user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${post.user.images.get(0).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post.user.images.size() == 2 and post.user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${post.user.images.get(1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post.user.images.size() == 2}" th:src="@{|/images/${post.user.images.get(1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post.user.images.size()  >=  3 }" th:src="@{|/images/${post.user.images.get(post.user.images.size() - 1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post.user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
 
                 </div>
                 <div class="post-info" >
@@ -246,6 +235,25 @@
             })
         }
     })
+
+
+    const chooseFile = document.getElementById("choose-file");
+    const imgPreview = document.getElementById("img-preview");
+
+    function getImgData() {
+        const files = chooseFile.files[0];
+        if (files) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(files);
+            fileReader.addEventListener("load", function () {
+                imgPreview.style.display = "block";
+                imgPreview.innerHTML = '<img src="' + this.result + '" />';
+            });
+        }
+    }
+    chooseFile.addEventListener("change", function () {
+        getImgData();
+    });
 
 
 </script>

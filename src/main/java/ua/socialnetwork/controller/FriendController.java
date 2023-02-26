@@ -32,7 +32,7 @@ public class FriendController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @friendServiceImpl.getById(#friendId).sender.id")
     @GetMapping("/{friendId}/delete")
-    public String deleteFromFriend(@PathVariable("friendId") Integer friendId) {
+    public String deleteFromFriendList(@PathVariable("friendId") Integer friendId) {
         friendService.removeFromFriends(friendId);
 
         return "redirect:/feed";

@@ -22,7 +22,7 @@ public class ImageController {
     private final PostImageRepo postImageRepo;
 
     @GetMapping("/images/{id}")
-    private ResponseEntity<?> getImage(@PathVariable Integer id) {
+    private ResponseEntity<?> getUserImage(@PathVariable Integer id) {
         UserImage image = userImageRepo.findById(id).orElse(null);
 
         return ResponseEntity.ok().contentType(MediaType.valueOf(image.getContentType())).contentLength(image.getSize()).body(new InputStreamResource(new ByteArrayInputStream(image.getBytes())));

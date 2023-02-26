@@ -108,13 +108,6 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/search")
-    public String getAll(Model model) {
-        model.addAttribute("users", userService.getAll());
-
-        return "Searchbar";
-    }
-
     @GetMapping("/{username}")
     public String getUser(@PathVariable("username") String username, @AuthenticationPrincipal SecurityUser authUser, Model model) {
         UserDto user = userService.readByUsername(username);
