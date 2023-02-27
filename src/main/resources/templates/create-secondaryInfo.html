@@ -162,20 +162,19 @@
       }
     }
 
+    #img-preview {
+      display: none;
+      width: 155px;
+      border: 2px dashed #333;
+      margin-bottom: 20px;
+    }
+    #img-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
 
 
-
-    /*For dropdown list*/
-    /*body {*/
-    /*    display: flex;*/
-    /*    flex-direction: column;*/
-    /*    justify-content: center;*/
-    /*    align-items: center;*/
-    /*    height: 100vh;*/
-    /*    background: #23b499;*/
-    /*    font-family: 'Open Sans', sans-serif;*/
-    /*    color: #fff;*/
-    /*}*/
     select {
       -webkit-appearance:none;
       -moz-appearance:none;
@@ -226,18 +225,68 @@
       color: #23b499;
     }
 
+    .inputfile {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+    .inputfile + label {
+      font-size: 1.25em;
+      font-weight: 700;
+      color: white;
+      background-color: black;
+      display: inline-block;
+    }
 
+    .inputfile:focus + label,
+    .inputfile + label:hover {
+      background-color: red;
+    }
+    .inputfile + label {
+      cursor: pointer; /* "hand" cursor */
+    }
+    .btn-warning{
+      position: relative;
+      padding: 11px 16px;
+      font-size: 15px;
+      line-height: 1.5;
+      border-radius: 3px;
+      color: #fff;
+      /*background-color: #ffc100;*/
+      /*background-color: #d74;*/
+      background-color: forestgreen;
+      border: 0;
+      transition: 0.2s;
+      overflow: hidden;
+    }
 
-    /*!*File upload css *!*/
-    /*input[type="file"] {*/
-    /*    display: none;*/
-    /*}*/
-    /*.custom-file-upload {*/
-    /*    border: 1px solid #ccc;*/
-    /*    display: inline-block;*/
-    /*    padding: 6px 12px;*/
-    /*    cursor: pointer;*/
-    /*}*/
+    .btn-warning input[type = "file"]{
+      cursor: pointer;
+      position: absolute;
+      left: 0%;
+      top: 0%;
+      transform: scale(3);
+      opacity: 0;
+    }
+
+    .btn-warning:hover{
+      background-color: #d9a400;
+    }
+    #img-preview {
+      display: none;
+      width: 155px;
+      border: 2px dashed #333;
+      margin-bottom: 20px;
+    }
+    #img-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
   </style>
 
 </head>
@@ -245,7 +294,7 @@
 <div class="container">
   <div class="title">Registration</div>
   <div class="content">
-    <form name="myForm" th:action="@{|/users/create/continue/${user.getId()}|}" th:object="${user}" enctype="multipart/form-data" method="POST">
+    <form name="myForm" th:action="@{|/users/create/continue/${user.getUsername()}/|}" th:object="${user}" enctype="multipart/form-data" method="POST">
       <div class="user-details">
 
         <input hidden type="number" th:field="*{id}" id="id" th:value="*{id}"/>
@@ -267,26 +316,23 @@
           <input type="text" th:field="*{country}">
         </div>
 
+        <div class="input-box">
+          <span class="details">Gender</span>
+          <div class="gender-details">
+            <input type="radio" name="gender" id="dot-1">
+            <input type="radio" name="gender" id="dot-2">
+            <input type="radio" name="gender" id="dot-3">
+            <div class="select">
+              <select name="format" id="format" th:field="*{gender}" >
 
-
-        <div class="gender-details">
-          <input type="radio" name="gender" id="dot-1">
-          <input type="radio" name="gender" id="dot-2">
-          <input type="radio" name="gender" id="dot-3">
-          <div class="select">
-            <span class="details">Gender</span>
-            <select name="format" id="format" th:field="*{gender}" >
-
-              <option th:each="gender : ${T(ua.socialnetwork.entity.enums.Gender).values()}"
-                      th:value="${gender}"
-                      th:text="${gender}">
-              </option>
-            </select>
+                <option th:each="gender : ${T(ua.socialnetwork.entity.enums.Gender).values()}"
+                        th:value="${gender}"
+                        th:text="${gender}">
+                </option>
+              </select>
+            </div>
           </div>
         </div>
-
-
-
 
         <div class="input-box">
           <span class="details">Password</span>
@@ -298,21 +344,30 @@
         </div>
       </div>
 
+      <div>
+        <div class="input-box">
+          <span class="details">Profile image</span>
 
+          <div class="upload">
+            <div class="img-preview"></div>
+            <button type = "button" class = "btn-warning">
+              <i class = "fa fa-upload"></i> Upload File
+              <input class="choose-file" type="file" name="userImage" accept="image/png, image/gif, image/jpeg">
+            </button>
+          </div>
+        </div>
 
-      <div class="input-box">
-        <span class="details">Profile image</span>
-        <input type="file" name="userImage">
+        <div class="input-box">
+          <span class="details">Background image</span>
+          <div class="upload">
+            <div id="img-preview"></div>
+            <button type = "button" class = "btn-warning">
+              <i class = "fa fa-upload"></i> Upload File
+              <input id="choose-file" type="file" name="imageBackground" accept="image/png, image/gif, image/jpeg">
+            </button>
+          </div>
+        </div>
       </div>
-
-      <div class="input-box">
-        <span class="details">Background image</span>
-        <input type="file" name="imageBackground">
-      </div>
-
-      <a th:href="@{/posts}" th:text="'Skip'"></a>
-
-
 
       <div class="button">
         <input type="submit" value="Create">
@@ -321,7 +376,26 @@
   </div>
 </div>
 
+<script src="/js/script.js"></script>
 <script>
+  const chooseFile = document.getElementById("choose-file");
+  const imgPreview = document.getElementById("img-preview");
+
+  function getImgData() {
+    const files = chooseFile.files[0];
+    if (files) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", function () {
+        imgPreview.style.display = "block";
+        imgPreview.innerHTML = '<img src="' + this.result + '" />';
+      });
+    }
+  }
+  chooseFile.addEventListener("change", function () {
+    getImgData();
+  });
+
   var password = document.getElementById("password")
           , confirm_password = document.getElementById("confirm_password");
 
@@ -344,6 +418,6 @@
     }
   }
 </script>
-
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </body>
 </html>

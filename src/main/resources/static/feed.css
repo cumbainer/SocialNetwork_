@@ -70,7 +70,6 @@ nav .nav-middle a > i{
 }
 
 nav .nav-right .profile, .container .left-panel .profile{
-    background: url('./images/dp.jpg');
     height:30px;
     width:30px;
     background-size: cover;
@@ -96,7 +95,8 @@ nav .nav-right a > i{
 
 
 .container{
-    background:#eee;
+    /*background:#eee;*/
+    background: aliceblue;
     display:flex;
 }
 
@@ -110,6 +110,7 @@ nav .nav-right a > i{
 .container .left-panel ul{
     padding:10px 0px;
 }
+
 .container .left-panel ul li{
     list-style: none;
     display: flex;
@@ -427,7 +428,7 @@ nav .nav-right a > i{
     line-height: 1.5;
     border-radius: 3px;
     color: #fff;
-    background-color: forestgreen;
+    background-color: slateblue;
     border: 0;
     transition: 0.2s;
     overflow: hidden;
@@ -455,14 +456,14 @@ nav .nav-right a > i{
     font-family:sans-serif;
     font-size: 16px;
     /*background: #d74;*/
-    background: forestgreen;
+    background: slateblue;
     color: white;
     height: 46px;
     width: 126px;
 }
 .form-submit-button:hover{
     /*background-color: #d9a400;*/
-    background-color: forestgreen;
+    background-color: slateblue;
 }
 .button-profile {
 
@@ -491,9 +492,9 @@ nav .nav-right a > i{
 
 
 .like__btn {
-    padding: 5px 15px;
+    padding: 10px 15px;
     /*background: #d74;*/
-    background: forestgreen;
+    background: slateblue;
 
     font-size: 18px;
     font-family: "Open Sans", sans-serif;
@@ -504,8 +505,8 @@ nav .nav-right a > i{
     cursor: pointer;
 }
 .like__btn-2 {
-    padding: 5px 15px;
-    background: forestgreen;
+    padding: 10px 15px;
+    background: slateblue;
     font-size: 18px;
     font-family: "Open Sans", sans-serif;
     border-radius: 5px;
@@ -535,6 +536,26 @@ nav .input-search:focus-visible{
     text-decoration: none;
 
 }
+
+.dp-profile-round-pic{
+    width: 40px;
+    height: 40px;
+}
+
+#img-preview {
+    display: none;
+    width: 155px;
+    border: 2px dashed #333;
+    margin-bottom: 20px;
+}
+#img-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+
 
 
 

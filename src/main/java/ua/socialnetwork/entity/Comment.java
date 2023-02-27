@@ -18,7 +18,7 @@ public class Comment {
     @Column(name = "comment_id")
     private long id;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User createdBy;
 
@@ -28,11 +28,11 @@ public class Comment {
     @Column(name = "createdDate")
     private LocalDateTime createdDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentReactions> reactions;
 
 }

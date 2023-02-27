@@ -3,24 +3,24 @@ package ua.socialnetwork.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@Table(name = "post")
+@Table(name = "posts")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private long id;
-
-    @Column(name = "title")
-    private String title;
 
     @Column(name = "body")
     private String body;
@@ -46,14 +46,11 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime editionDate;
 
-    @Column(name = "deletionDate")
-    private LocalDateTime deletionDate;
-
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> comments;
     @OneToOne(cascade = CascadeType.ALL)
     private PostImage image;
@@ -62,21 +59,19 @@ public class Post {
     public String toString() {
         return "Post{" +
                 "id=" + id +
-                ", title='" + title + '\'' +
                 ", body='" + body + '\'' +
                 ", liked=" + liked +
                 ", disliked=" + disliked +
                 ", creationDate=" + creationDate +
                 ", editionDate=" + editionDate +
-                ", deletionDate=" + deletionDate +
                 ", comments=" + comments +
                 '}';
     }
 
-    public void setImageToPost(PostImage userImage){
+    public void setImageToPost(PostImage postImage) {
 
-        userImage.setPost(this);
-        image = userImage;
+        postImage.setPost(this);
+        image = postImage;
     }
 
 }

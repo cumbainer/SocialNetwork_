@@ -1,21 +1,31 @@
 package ua.socialnetwork.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.dto.UserDto;
 import ua.socialnetwork.entity.User;
-import java.util.*;
+
+import java.util.List;
 
 public interface UserService {
 
-    User create(User user);
-    User create(User user, MultipartFile userImage);
-    User create(User user, MultipartFile userImage, MultipartFile imageBackground);
+    User create(UserDto user);
+
+    User create(UserDto user, MultipartFile userImage);
+
+    User create(UserDto user, MultipartFile userImage, MultipartFile imageBackground);
+
     User update(User user, MultipartFile userImage);
+
+    User update(User user);
+
     User update(User user, MultipartFile userImage, MultipartFile imageBackground);
-    User delete(int id);
-    User readById(int id);
-    User readByUsername(String username);
+    User returnUserByUsername(String username);
 
-    List<User> getAll();
+    void delete(int id);
 
+    UserDto readById(int id);
 
+    UserDto readByUsername(String username);
+
+    List<UserDto> getAll();
 }

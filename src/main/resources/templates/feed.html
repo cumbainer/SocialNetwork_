@@ -23,12 +23,12 @@
 
 <nav>
 
-    <div th:replace="search-bar"></div>
+    <div th:replace="~{search-bar}"></div>
 
     <div class="nav-middle">
         <a th:href="@{/feed}" class="active">
             <i class="fa fa-home"></i>
-            <a href="#">
+            <a th:href="@{|/users/${#authentication.principal.username}/friends|}">
                 <i class="fa fa-user-friends"></i>
             </a>
         </a>
@@ -44,13 +44,12 @@
     <div class="nav-right">
         <span class="profile"></span>
 
-        <a href="#">
+        <a th:href="@{/friend/notification}">
             <i class="fa fa-bell"></i>
         </a>
 
     </div>
 </nav>
-
 
 <div class="container" style="max-width: 100%;">
     <div class="left-panel">
@@ -59,32 +58,15 @@
                 <span class="profile"></span>
                 <div class="profile-pic" th:if="${#authentication.principal.username != null}">
 
-                    <!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"  ></a>-->
-                    <!--                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img   src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>-->
-
-                    <a th:href="@{|/users/${#authentication.principal.username}|}"><img
-                            th:if="${ifImageIsPresent == true}" class="button-profile"
-                            th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt=""></a>
-                    <a th:href="@{|/users/${#authentication.principal.username}|}"><img
-                            th:if="${ifImageIsPresent == false}" class="button-profile"
-                            src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png"
-                            alt=""></a>
+                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${imageIsPresent == true}"  class="button-profile" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" ></a>
+                    <a  th:href="@{|/users/${#authentication.principal.username}|}"><img th:if="${imageIsPresent == false}" class="button-profile" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" ></a>
 
                 </div>
-                <p th:href="@{|/users/${#authentication.principal.username}|}"
-                   th:text="${#authentication.principal.fullName}"></p>
+                <p th:href="@{|/users/${#authentication.principal.username}|}" th:text="${#authentication.principal.fullName}"></p>
             </li>
             <li>
                 <i class="fa fa-user-friends"></i>
                 <p>Friends</p>
-            </li>
-            <li>
-                <i class="fa fa-play-circle"></i>
-                <p>Videos</p>
-            </li>
-            <li>
-                <i class="fa fa-flag"></i>
-                <p>Pages</p>
             </li>
             <li>
                 <i class="fa fa-users"></i>
@@ -98,18 +80,7 @@
                 <i class="fab fa-facebook-messenger"></i>
                 <p>Inbox</p>
             </li>
-            <li>
-                <i class="fas fa-calendar-week"></i>
-                <p>Events</p>
-            </li>
-            <li>
-                <i class="fas fa-hands-helping"></i>
-                <p>Offers</p>
-            </li>
-            <li>
-                <i class="fas fa-briefcase"></i>
-                <p>Jobs</p>
-            </li>
+
             <li>
                 <i class="fa fa-star"></i>
                 <p>Favourites</p>
@@ -117,10 +88,10 @@
         </ul>
 
         <div class="footer-links">
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
-            <a href="#">Advance</a>
-            <a href="#">More</a>
+<!--            <a href="#">Privacy</a>-->
+<!--            <a href="#">Terms</a>-->
+<!--            <a href="#">Advance</a>-->
+            <a th:href="@{/util/more}">More</a>
         </div>
     </div>
 
@@ -128,16 +99,12 @@
     <div class="middle-panel">
 
 
-        <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}"
-              th:action="@{|/posts/new/${#authentication.principal.username}|}" th:object="${newPost}" method="post">
+        <form enctype="multipart/form-data" th:if="${#authentication.principal.username != null}" th:action="@{|/posts/new/${#authentication.principal.username}/|}" th:object="${newPost}"  method="post">
             <div class="post create">
                 <div class="post-top">
                     <div class="dp">
-                        <img th:if="${ifImageIsPresent == true}"
-                             th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="">
-                        <img th:if="${ifImageIsPresent == false}"
-                             src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png"
-                             alt="">
+                        <img class="dp-profile-round-pic" th:if="${imageIsPresent == true}" th:src="@{|/images/${#authentication.principal.imageForFeed}|}" alt="" >
+                        <img class="dp-profile-round-pic" th:if="${imageIsPresent == false}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="" >
                     </div>
                     <input type="text"
                            th:placeholder="${'What is on your mind, ' + #authentication.principal.firstName + '?' }"
@@ -146,14 +113,15 @@
 
                 <div class="post-bottom">
 
+
                     <div class="upload">
-                        <button type="button" class="btn-warning">
-                            <i class="fa fa-upload"></i> Upload File
-                            <input type="file" name="postImage">
+                        <div id="img-preview"></div>
+                        <button type = "button" class = "btn-warning">
+                            <i class = "fa fa-upload"></i> Upload File
+                            <input id="choose-file" type="file" name="postImage" accept="image/png, image/gif, image/jpeg">
                         </button>
                     </div>
-
-
+                    
                     <input class="form-submit-button" type="submit" value="Create">
                 </div>
 
@@ -163,29 +131,26 @@
         </form>
 
         <div class="post" th:each="post, iter : ${posts}">
-            <div class="post-top">
+            <div class="post-top" th:switch="${post[0].getUser().getUsername() == #authentication.principal.username}">
                 <div class="dp">
-                    <!--                    <a th:href="@{|/users/${post[0].getUser().getUsername()}|}">-->
-                    <img th:if="${ifImageIsPresent == true}"
-                         th:src="@{|/images/${post[0].getUser().getImages().get(0).getId()}|}" alt="">
-                    <img th:if="${ifImageIsPresent == false}"
-                         src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png" alt="">
-                    <!--                    </a>-->
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 1 and post[0].user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${post[0].user.images.get(0).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2 and post[0].user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${post[0].user.images.get(1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2}" th:src="@{|/images/${post[0].user.images.get(1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size()  >=  3 }" th:src="@{|/images/${post[0].user.images.get(post[0].user.images.size() - 1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
+
                 </div>
-                <div class="post-info">
-                    <a class="underline" th:href="@{|/users/${post[0].getUser().getUsername()}|}"
-                       style="text-decoration: #0e0e0e">
-                        <p class="name"
-                           th:text="${post[0].getUser().getFirstName() + ' ' +  post[0].getUser().getLastName()}"></p>
-                    </a>
-                    <!--                    todo make proper show of creation data(1 day ago, 1 week ago , etc)-->
-                    <span class="time" th:text="${post[0].getCreationDate()}"
-                          style="position:relative; top: -20px;"></span>
+                <div class="post-info" >
+                    <a class="underline" th:href="@{|/users/${post[0].getUser().getUsername()}|}" style="text-decoration: #0e0e0e; color: #0e0e0e">
+                        <p class="name" th:text="${post[0].getUser().getFirstName() + ' ' +  post[0].getUser().getLastName()}"></p></a>
+
+                    <span class="time" th:text="${post[0].getCreationDate()}" style = "position:relative; top: -20px;" ></span>
 
                 </div>
 
-                <a th:href="@{|/posts/update/${post[0].id}|}" style="position: relative;left: 291px"><i
-                        class="fas fa-edit"></i></a>
+                <a th:case="true" th:href="@{|/posts/${post[0].id}/update/|}" style="position: relative;left: 291px"><i class="fas fa-edit"></i></a>
+
+
             </div>
 
             <div class="post-content">
@@ -197,24 +162,23 @@
                         <img th:if="${post[0].getImage() == null}"/>
                     </a>
                 </div>
-
             </div>
-
 
             <div class="post-bottom">
 
                 <button class="like__btn">
                     <span id="count" th:text="${post[0].likeCounter}"></span>
                     <span id="icon" th:if="${post[0].liked}"><i class="fas fa-thumbs-up"></i></span>
-                    <a th:href="@{|/posts/like/${post[0].id}|}" th:unless="${post[0].liked}"><i
-                            class="far fa-thumbs-up"></i></a>
+                    <a th:href="@{|/posts/${post[0].id}/like/|}" th:unless="${post[0].liked}"><i class="far fa-thumbs-up"></i></a>
                 </button>
+
                 <button class="like__btn-2">
                     <span id="count-2" th:text="${post[0].dislikeCounter}"></span>
                     <span id="icon-2" th:if="${post[0].disliked}"><i class="fas fa-thumbs-down"></i></span>
-                    <a th:href="@{|/posts/dislike/${post[0].id}|}" th:unless="${post[0].disliked}"><i
-                            class="far fa-thumbs-down"></i></a>
+                    <a th:href="@{|/posts/${post[0].id}/dislike/|}" th:unless="${post[0].disliked}"><i class="far fa-thumbs-down"></i></a>
                 </button>
+
+
 
                 <div class="">
                     <a href="#" class="btn btn-outline-secondary text-none-decoration btn-comment border-0"><i
@@ -260,87 +224,48 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="right-panel">
-        <div class="pages-section">
-            <h4>Your pages</h4>
-            <a class='page' href="#">
-                <div class="dp">
-                    <img src="./images/logo.png" alt="">
-                </div>
-                <p class="name">Cody</p>
-            </a>
-
-            <a class='page' href="#">
-                <div class="dp">
-                    <img src="./images/dp.jpg" alt="">
-                </div>
-                <p class="name">Cody Tutorials</p>
-            </a>
-        </div>
-
-        <div class="friends-section">
-            <h4>Friends</h4>
-            <a class='friend' href="#">
-                <div class="dp">
-                    <img src="./images/dp.jpg" alt="">
-                </div>
-                <p class="name">Henry Mosely</p>
-            </a>
-
-            <a class='friend' href="#">
-                <div class="dp">
-                    <img src="./images/shoes.jpg" alt="">
-                </div>
-                <p class="name">George</p>
-            </a>
-
-            <a class="friend" href="#">
-                <div class="dp">
-                    <img src="./images/boy.jpg" alt="">
-                </div>
-                <p class="name">Aakash Malhotra</p>
-            </a>
-
-            <a class="friend" href="#">
-                <div class="dp">
-                    <img src="./images/model.jpg" alt="">
-                </div>
-                <p class="name">Ragini Khanna</p>
-            </a>
-
-            <a class="friend" href="#">
-                <div class="dp">
-                    <img src="./images/boy.jpg" alt="">
-                </div>
-                <p class="name">Justin Bieber</p>
-            </a>
-
-            <a class="friend" href="#">
-                <div class="dp">
-                    <img src="./images/dp.jpg" alt="">
-                </div>
-                <p class="name">Ramesh GC</p>
-            </a>
-
-            <a class="friend" href="#">
-                <div class="dp">
-                    <img src="./images/model.jpg" alt="">
-                </div>
-                <p class="name">Sajita Gurung</p>
-            </a>
-
-        </div>
 
     </div>
-
 
 </div>
 
-
 <script src="/js/script.js"></script>
+<script>
 
+
+
+
+    const searchInput = document.querySelector("[data-search]")
+
+    let users = []
+
+
+    searchInput.addEventListener("input", (e) => {
+
+        const value = e.target.value.toLowerCase().trim()
+        let cardsList = document.querySelectorAll('.user-card')
+        if (value.length == 0){
+            cardsList.forEach((card) => {
+                card.style.display = 'none';
+            })
+        }  else {
+            cardsList.forEach((card) => {
+                let cardHeader = card.querySelector('[data-header]')
+                let text = cardHeader.innerHTML.toLowerCase()
+                if (text.includes(value)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            })
+        }
+    })
+
+
+
+</script>
+
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </body>
 
 </html>

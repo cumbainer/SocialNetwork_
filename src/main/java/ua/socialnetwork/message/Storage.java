@@ -23,8 +23,6 @@ public class Storage {
     private Queue<ChatMessage> messages = new ConcurrentLinkedQueue<>();
     private ComponentEventBus eventBus = new ComponentEventBus(new Div());
 
-
-
     @Getter
     @AllArgsConstructor
     public static class ChatMessage {

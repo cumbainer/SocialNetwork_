@@ -2,10 +2,7 @@ package ua.socialnetwork.entity;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import ua.socialnetwork.entity.enums.UserRole;
 import ua.socialnetwork.entity.enums.Gender;
 import ua.socialnetwork.serializer.UserSerializer;
@@ -13,13 +10,14 @@ import ua.socialnetwork.serializer.UserSerializer;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @JsonSerialize(using = UserSerializer.class)
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
-@ToString
 @Table(name = "users")
 public class User {
 
@@ -33,7 +31,6 @@ public class User {
     private String firstName;
 
     @Column(name = "lastName", nullable = false)
-
     private String lastName;
 
     @Column(name = "username", unique = true)
@@ -77,10 +74,13 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
 
-    @OneToMany(mappedBy = "user")
-    private List<Friend> friends;
+    @OneToMany(mappedBy = "sender", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Friend> sentRequest;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private Set<Friend> receivedRequests;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CommentReactions> reactions;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,
@@ -92,13 +92,11 @@ public class User {
         images.add(image);
     }
 
-    //Needed to set user`s BACKGROUND image (which can not be changed)
     public void setBackgroundImageToUser(UserImage image){
         image.setUser(this);
-        if(this.getImages().size() >= 1){
+        if(this.getImages() != null && this.getImages().size() >= 1){
             images.add(0, image);
         }
         images.add(image);
     }
-
 }
