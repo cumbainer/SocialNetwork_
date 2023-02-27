@@ -12,13 +12,10 @@ import ua.socialnetwork.dto.PostDto;
 import ua.socialnetwork.entity.*;
 import ua.socialnetwork.entity.enums.PostAction;
 import ua.socialnetwork.repo.CommentReactionRepo;
-import ua.socialnetwork.repo.CommentRepository;
+import ua.socialnetwork.repo.CommentRepo;
 import ua.socialnetwork.repo.PostRepo;
 import ua.socialnetwork.service.PostService;
 
-
-import java.lang.reflect.Array;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +26,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private PostRepo postRepo;
     private ModelMapper modelMapper;
-
-    private CommentRepository commentRepository;
-
+    private CommentRepo commentRepo;
     private CommentReactionRepo commentReactionRepo;
 
     @Override
@@ -95,7 +90,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> getAll() {
-        return postRepo.findAll(Sort.by(Sort.Direction.DESC, "id")).stream()
+        return postRepo.findAll(Sort.by(Sort.Direction.DESC, "creationDate")).stream()
                 .map(post -> modelMapper.map(post, PostDto.class)).toList();
     }
 
@@ -119,7 +114,7 @@ public class PostServiceImpl implements PostService {
 
 
     //Needed to put like/dislike on a post
-    public void makeReaction (Post postDto, PostAction action){
+    public void makeReaction(Post postDto, PostAction action) {
 
         int likeCounter = postDto.getLikeCounter();
         int dislikeCounter = postDto.getDislikeCounter();
@@ -153,8 +148,6 @@ public class PostServiceImpl implements PostService {
     }
 
 
-
-
     public List<Object> postPreparation(User user) {
         List<Object> dataPosts = new ArrayList<>();
 
@@ -169,7 +162,7 @@ public class PostServiceImpl implements PostService {
             List<Object> itemComments = new ArrayList<>();
             itemPost.add(0, post);
 
-            List<Comment> comments = commentRepository.findAllByPostId((int) post.getId());
+            List<Comment> comments = commentRepo.findAllByPostId((int) post.getId());
             for (Comment comment : comments) {
                 List<Object> itemComment = new ArrayList<>();
                 itemComment.add(0, comment);
@@ -181,13 +174,64 @@ public class PostServiceImpl implements PostService {
 
                 List<CommentReactions> reactions = commentReactionRepo.findAllByCommentId((int) comment.getId());
                 for (CommentReactions reaction : reactions) {
-                    if (reaction.getReaction() == true) {
+                    if (reaction.getReaction()) {
                         likeSum++;
                     } else {
                         dislikeSum++;
                     }
                     if (reaction.getUser().getId() == user.getId()) {
-                        if (reaction.getReaction() == true) {
+                        if (reaction.getReaction()) {
+                            isLike = true;
+                        } else {
+                            isDislike = true;
+                        }
+                    }
+                }
+                itemComment.add(1, likeSum);
+                itemComment.add(2, dislikeSum);
+                itemComment.add(3, isLike);
+                itemComment.add(4, isDislike);
+                itemComments.add(itemComment);
+            }
+            itemPost.add(1, itemComments);
+            dataPosts.add(0, itemPost);
+        }
+        return dataPosts;
+    }
+    @Override
+    public List<Object> postPreparationForUser(User user) {
+        List<Object> dataPosts = new ArrayList<>();
+
+        int likeSum;
+        int dislikeSum;
+        boolean isLike;
+        boolean isDislike;
+
+        List<Post> posts = postRepo.getPostsByUserId((int) user.getId());
+        for (Post post : posts) {
+            List<Object> itemPost = new ArrayList<>();
+            List<Object> itemComments = new ArrayList<>();
+            itemPost.add(0, post);
+
+            List<Comment> comments = commentRepo.findAllByPostId((int) post.getId());
+            for (Comment comment : comments) {
+                List<Object> itemComment = new ArrayList<>();
+                itemComment.add(0, comment);
+
+                likeSum = 0;
+                dislikeSum = 0;
+                isLike = false;
+                isDislike = false;
+
+                List<CommentReactions> reactions = commentReactionRepo.findAllByCommentId((int) comment.getId());
+                for (CommentReactions reaction : reactions) {
+                    if (reaction.getReaction()) {
+                        likeSum++;
+                    } else {
+                        dislikeSum++;
+                    }
+                    if (reaction.getUser().getId() == user.getId()) {
+                        if (reaction.getReaction()) {
                             isLike = true;
                         } else {
                             isDislike = true;

@@ -16,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    //ToDO add different exceptions here
-
     @ExceptionHandler(NullEntityReferenceException.class)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ModelAndView nullEntityReferenceExceptionHandler(HttpServletRequest request, NullEntityReferenceException exception) {

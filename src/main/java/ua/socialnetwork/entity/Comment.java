@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 @Table(name = "comment")
 public class Comment {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -34,5 +33,4 @@ public class Comment {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentReactions> reactions;
-
 }

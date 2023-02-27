@@ -73,8 +73,8 @@ public class UserServiceTests {
 
     @BeforeEach
     void setUp(){
-        when(userRepository.findById(validUser.getId())).thenReturn(Optional.of(validUser));
-        when(userRepository.findById(invalidUser.getId())).thenReturn(Optional.of(invalidUser));
+        when(userRepository.findById((int) validUser.getId())).thenReturn(Optional.of(validUser));
+        when(userRepository.findById((int) invalidUser.getId())).thenReturn(Optional.of(invalidUser));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class UserServiceTests {
     @Test
     @DisplayName("Delete existing user")
     public void deleteExistingUserTest(){
-        userService.delete(validUser.getId());
+        userService.delete((int) validUser.getId());
         Mockito.verify(userRepository,Mockito.times(1)).delete(validUser);
     }
 

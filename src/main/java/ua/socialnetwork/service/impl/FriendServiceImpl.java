@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ua.socialnetwork.dto.FriendDto;
-import ua.socialnetwork.dto.UserDto;
 import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.enums.FriendStatus;

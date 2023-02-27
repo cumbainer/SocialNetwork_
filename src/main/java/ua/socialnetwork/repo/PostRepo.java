@@ -8,13 +8,7 @@ import java.util.List;
 
 
 public interface PostRepo extends JpaRepository<Post, Integer> {
-
-
     List<Post> getPostsByUserId(Integer id);
     List<Post> getPostsByUser_Username(String username, Sort sort);
-
-//    @Override
-//    @Query("SELECT p from Post p where ORDER BY id desc ")
-//    List<Post> findAll();
 
 }
