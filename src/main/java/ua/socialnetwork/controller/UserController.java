@@ -119,7 +119,8 @@ public class UserController {
         model.addAttribute("ifFriend", friend != null);
         model.addAttribute("isAccount", authUser.getUsername().equals(username));
         model.addAttribute("imageIsPresent", authUser.getImages().size() > 0);
-        model.addAttribute("posts", postService.postPreparation(userRepo.getById((int)authUser.getId())));
+        model.addAttribute("posts", postService.postPreparationForUser(userRepo.findById(user.getId()).orElse(null)));
+
         model.addAttribute("user", userService.readByUsername(username));
         model.addAttribute("image", user.getImages());
         model.addAttribute("users", userService.getAll());

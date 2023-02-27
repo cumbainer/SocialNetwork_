@@ -2,16 +2,11 @@ package ua.socialnetwork.controller;
 
 import com.nimbusds.jose.shaded.json.JSONObject;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.AuthenticatedPrincipal;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ua.socialnetwork.entity.CommentReactions;
 import ua.socialnetwork.entity.User;
-import ua.socialnetwork.repo.CommentReactionRepo;
-import ua.socialnetwork.repo.CommentRepository;
 import ua.socialnetwork.repo.UserRepo;
 import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.CommentReactionService;

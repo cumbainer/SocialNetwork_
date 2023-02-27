@@ -13,6 +13,7 @@ import ua.socialnetwork.repo.UserRepo;
 import ua.socialnetwork.service.CommentService;
 import ua.socialnetwork.service.PostService;
 import ua.socialnetwork.service.UserService;
+
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,13 +23,12 @@ import java.util.List;
 @RequestMapping("/comment")
 @Slf4j
 public class CommentsController {
-    private final UserRepo userRepo;
     private final CommentService commentService;
     private final PostService postService;
     private UserService userService;
 
     @GetMapping("/all/{post_id}")
-    public String getAll (@PathVariable("post_id") int post_id, Model model){
+    public String getAll(@PathVariable("post_id") int post_id, Model model) {
         List<Comment> allComments = commentService.getCommentsByPostId(post_id);
         model.addAttribute("allComments", allComments);
         model.addAttribute("post", postService.readById(post_id));
@@ -41,7 +41,7 @@ public class CommentsController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public JSONArray createComment(@RequestParam("comment") String text, @RequestParam("post_id") int post_id, Principal principal){
+    public JSONArray createComment(@RequestParam("comment") String text, @RequestParam("post_id") int post_id, Principal principal) {
 
         JSONArray array = new JSONArray();
         Post post = postService.returnPostEntityById(post_id);

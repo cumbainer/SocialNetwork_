@@ -3,11 +3,9 @@ package ua.socialnetwork.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import ua.socialnetwork.entity.Friend;
 import ua.socialnetwork.entity.User;
 import ua.socialnetwork.entity.UserImage;
@@ -20,14 +18,13 @@ import java.util.Set;
 @Slf4j
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
-    private  User user;
+    private User user;
 
     @Override
     //This method represents what users are allowed to do(authorities)
-    //ToDo replace after with not static impl
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> roleList = new ArrayList<>();
-        roleList.add(new SimpleGrantedAuthority("ROLE_" +user.getRole()));
+        roleList.add(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
         return roleList;
     }
 
@@ -36,7 +33,7 @@ public class SecurityUser implements UserDetails {
         return user.getPassword();
     }
 
-    public long getId(){
+    public long getId() {
         return user.getId();
     }
 
@@ -65,48 +62,49 @@ public class SecurityUser implements UserDetails {
         return true;
     }
 
-    public String getFullName(){
+    public String getFullName() {
         return user.getFirstName() + ' ' + user.getLastName();
     }
-    public int getAge(){
+
+    public int getAge() {
         return user.getAge();
     }
-    public String getFirstName(){
+
+    public String getFirstName() {
         return user.getFirstName();
     }
-    public List<UserImage> getImages(){
+
+    public List<UserImage> getImages() {
         return user.getImages();
     }
+
     public int getImage() {
         return user.getImages().get(0).getId();
     }
-    public int getId(){
-        return user.getId();
-    }
 
-    //todo refactor
-    public int getImageForFeed(){
+    public int getImageForFeed() {
         List<UserImage> out = user.getImages();
 
-        if(out.size()==1 && out.get(0).getName().equals("userImage")){
+        if (out.size() == 1 && out.get(0).getName().equals("userImage")) {
             return out.get(0).getId();
         }
-        if(out.size() == 2 && out.get(0).getName().equals("backgroundImage")){
+        if (out.size() == 2 && out.get(0).getName().equals("backgroundImage")) {
             return out.get(1).getId();
         }
-        if(out.size() == 2){
+        if (out.size() == 2) {
             return out.get(1).getId();
         }
-        if(out.size() >= 3){
-            return out.get(user.getImages().size() -1).getId();
+        if (out.size() >= 3) {
+            return out.get(user.getImages().size() - 1).getId();
         }
         return -1;
 
     }
 
-    public Set<Friend> getReceivedRequests(){
+    public Set<Friend> getReceivedRequests() {
         return user.getReceivedRequests();
     }
+
     public Set<Friend> getSentRequest() {
         return user.getSentRequest();
     }

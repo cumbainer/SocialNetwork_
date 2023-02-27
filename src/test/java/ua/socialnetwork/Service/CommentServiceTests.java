@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ua.socialnetwork.entity.Comment;
-import ua.socialnetwork.repo.CommentRepository;
+import ua.socialnetwork.repo.CommentRepo;
 import ua.socialnetwork.service.CommentService;
 
 import java.time.LocalDateTime;
@@ -30,7 +30,7 @@ public class CommentServiceTests {
     @Autowired
     private CommentService commentService;
     @MockBean
-    private CommentRepository commentRepository;
+    private CommentRepo commentRepo;
     private Comment validComment;
     private Comment invalidComment;
 
@@ -49,23 +49,23 @@ public class CommentServiceTests {
 
     @BeforeEach
     void setUp() {
-        when(commentRepository.findById((int) validComment.getId())).thenReturn(Optional.of(validComment));
-        when(commentRepository.findById((int) invalidComment.getId())).thenReturn(Optional.of(invalidComment));
+        when(commentRepo.findById((int) validComment.getId())).thenReturn(Optional.of(validComment));
+        when(commentRepo.findById((int) invalidComment.getId())).thenReturn(Optional.of(invalidComment));
     }
 
     @Test
     @DisplayName("Create new valid comment")
     public void createValidCommentTest() {
-        given(commentRepository.save(validComment)).willReturn(validComment);
+        given(commentRepo.save(validComment)).willReturn(validComment);
         Comment addedComment = commentService.create(validComment);
-        verify(commentRepository).save(any(Comment.class));
+        verify(commentRepo).save(any(Comment.class));
         Assertions.assertEquals(validComment, addedComment);
     }
 
     @Test
     @DisplayName("Create new invalid comment")
     public void createNewInvalidCommentTest() {
-        Mockito.when(commentRepository.save(invalidComment)).thenThrow(new IllegalArgumentException());
+        Mockito.when(commentRepo.save(invalidComment)).thenThrow(new IllegalArgumentException());
         Assertions.assertThrows(IllegalArgumentException.class,
                 () -> commentService.create(invalidComment));
     }
@@ -73,7 +73,7 @@ public class CommentServiceTests {
     @Test
     @DisplayName("Create invalid text")
     public void createNullSymbolTextTest() {
-        Mockito.when(commentRepository.save(null)).thenThrow(new NullPointerException());
+        Mockito.when(commentRepo.save(null)).thenThrow(new NullPointerException());
         Assertions.assertThrows(NullPointerException.class,
                 () -> commentService.create(null));
     }
@@ -84,15 +84,15 @@ public class CommentServiceTests {
         List<Comment> allComments = new ArrayList<>();
         allComments.add(validComment);
 
-        given(commentRepository.findAll()).willReturn(allComments);
+        given(commentRepo.findAll()).willReturn(allComments);
         Assertions.assertEquals(allComments, commentService.getAll());
     }
 
     @Test
     @DisplayName("Find comment by ID Test")
     public void getCommentById() {
-        Mockito.when(commentRepository.save(validComment)).thenThrow(new IllegalArgumentException());
-        Assertions.assertEquals(Optional.ofNullable(validComment), commentRepository.findById(100));
+        Mockito.when(commentRepo.save(validComment)).thenThrow(new IllegalArgumentException());
+        Assertions.assertEquals(Optional.ofNullable(validComment), commentRepo.findById(100));
     }
 }
 

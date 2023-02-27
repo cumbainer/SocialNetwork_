@@ -1,4 +1,4 @@
-package ua.socialnetwork.controller.uti;
+package ua.socialnetwork.controller.util;
 
 
 import org.springframework.stereotype.Controller;

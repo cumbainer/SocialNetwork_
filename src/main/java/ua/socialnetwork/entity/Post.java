@@ -2,7 +2,6 @@ package ua.socialnetwork.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,13 +24,10 @@ public class Post {
     @Column(name = "body")
     private String body;
 
-    //TODO make like/dislike attached to an user
-
     @Column(name = "liked")
     private boolean liked;
     @Column(name = "disliked")
     private boolean disliked;
-
 
     @Column(name = "likeCounter")
     private int likeCounter;
@@ -73,5 +69,4 @@ public class Post {
         postImage.setPost(this);
         image = postImage;
     }
-
 }

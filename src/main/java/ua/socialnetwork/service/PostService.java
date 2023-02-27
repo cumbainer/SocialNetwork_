@@ -28,4 +28,5 @@ public interface PostService {
     void makeReaction(Post post, PostAction action);
 
     List<Object> postPreparation(User user);
+    List<Object> postPreparationForUser(User user);
 }

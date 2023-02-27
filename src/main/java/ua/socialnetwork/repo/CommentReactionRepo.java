@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface CommentReactionRepo extends JpaRepository<CommentReactions, Integer> {
 
     CommentReactions findCommentReactionByCommentIdAndUser(Integer comment_id, User user);
+
     List<CommentReactions> findAllByCommentId(Integer comment_id);
 
     Optional<CommentReactions> findById(Integer integers);
