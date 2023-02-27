@@ -27,7 +27,6 @@ public class User {
     private long id;
 
     @Column(name = "firstName", nullable = false)
-
     private String firstName;
 
     @Column(name = "lastName", nullable = false)

@@ -5,12 +5,11 @@
 body {
     min-height: 100vh;
     margin: 40px 0px;
-    background-color: #385591;
+    /*background-color: #385591;*/
+    background-color: lightskyblue;
 
 }
-footer{
-    margin-top: auto;
-}
+
 
 
 body,
@@ -1269,6 +1268,6 @@ nav .input-search:focus-visible{
     outline-width: 0!important;
 }
 
-.container-fluid{
+.just-for-background{
     background: lightskyblue;
 }

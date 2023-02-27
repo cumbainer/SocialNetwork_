@@ -88,11 +88,14 @@ public class SecurityUser implements UserDetails {
         if (out.size() == 1 && out.get(0).getName().equals("userImage")) {
             return out.get(0).getId();
         }
-        if (out.size() == 2 && out.get(0).getName().equals("backgroundImage")) {
+        if (out.size() == 2 && out.get(1).getName().equals("backgroundImage")) {
+            return out.get(0).getId();
+        }
+        if (out.size() == 2 && out.get(1).getName().equals("userImage")) {
             return out.get(1).getId();
         }
         if (out.size() == 2) {
-            return out.get(1).getId();
+            return out.get(0).getId();
         }
         if (out.size() >= 3) {
             return out.get(user.getImages().size() - 1).getId();

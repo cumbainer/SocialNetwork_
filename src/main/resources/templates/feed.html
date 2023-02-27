@@ -134,8 +134,9 @@
             <div class="post-top" th:switch="${post[0].getUser().getUsername() == #authentication.principal.username}">
                 <div class="dp">
                     <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 1 and post[0].user.images.get(0).getName() == 'userImage'}" th:src="@{|/images/${post[0].user.images.get(0).getId()}|}">
-                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2 and post[0].user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${post[0].user.images.get(1).getId()}|}">
-                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2}" th:src="@{|/images/${post[0].user.images.get(1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2 and post[0].user.images.get(1).getName() == 'backgroundImage'}" th:src="@{|/images/${post[0].user.images.get(0).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2 and post[0].user.images.get(1).getName() == 'userImage'}" th:src="@{|/images/${post[0].user.images.get(1).getId()}|}">
+                    <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 2}" th:src="@{|/images/${post[0].user.images.get(0).getId()}|}">
                     <img class="dp-profile-round-pic" th:if="${post[0].user.images.size()  >=  3 }" th:src="@{|/images/${post[0].user.images.get(post[0].user.images.size() - 1).getId()}|}">
                     <img class="dp-profile-round-pic" th:if="${post[0].user.images.size() == 0}" src="https://www.ohlq.com/ui/dist/assets/toolkit/images/product/no-product-image.png">
 

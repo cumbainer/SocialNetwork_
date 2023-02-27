@@ -106,6 +106,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
             user.setEditionDate(LocalDateTime.now());
+            user.setCreationDate(user.getCreationDate());
             return userRepo.save(user);
 
         }
@@ -118,6 +119,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
             user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
+            user.setCreationDate(user.getCreationDate());
             user.setEditionDate(LocalDateTime.now());
             return userRepo.save(user);
 
@@ -145,6 +147,7 @@ public class UserServiceImpl implements UserService {
 
             user.setRole(UserRole.USER);
             user.setPassword(encoder.encode(user.getPassword()));
+            user.setCreationDate(user.getCreationDate());
             user.setEditionDate(LocalDateTime.now());
             return userRepo.save(user);
         }
