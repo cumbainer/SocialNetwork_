@@ -44,10 +44,10 @@ public class CommentsController {
     public JSONArray createComment(@RequestParam("comment") String text, @RequestParam("post_id") int post_id, Principal principal){
 
         JSONArray array = new JSONArray();
-        Post post = postService.readById(post_id);
+        Post post = postService.returnPostEntityById(post_id);
         Comment comment = new Comment();
         comment.setPost(post);
-        User user = userRepo.getUserByUsername(principal.getName());
+        User user = userService.returnUserByUsername(principal.getName());
         comment.setCreatedBy(user);
         comment.setCreatedDate(LocalDateTime.now());
         comment.setText(text);

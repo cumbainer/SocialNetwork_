@@ -16,7 +16,7 @@
   <div class="error__title" th:text="${code}"></div>
   <div class="error__subtitle">Hmmm...</div>
   <div class="error__description">It looks like one of the  developers fell asleep</div>
-  <button class="error__button error__button--active">LOGIN</button>
+<!--todo add contacts-->
   <button class="error__button">CONTACT</button>
 </div>
 
@@ -126,4 +126,5 @@
   drawVisor();
   animate();
 </script>
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </html>

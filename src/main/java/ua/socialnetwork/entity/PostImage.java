@@ -2,10 +2,7 @@ package ua.socialnetwork.entity;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Data
@@ -34,7 +31,7 @@ public class PostImage {
     @Lob
     private byte[] bytes;
 
-    @OneToOne(mappedBy = "image",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "image")
     @JoinColumn(name = "post_id")
     private Post post;
 

@@ -27,8 +27,7 @@ public class MainView extends VerticalLayout {
     private String user = "";
 
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //ToDO put in try catch
-    SecurityUser u = (SecurityUser) authentication.getPrincipal();
+    SecurityUser authUser = (SecurityUser) authentication.getPrincipal();
 
     public MainView(Storage storage) {
         this.storage = storage;
@@ -37,11 +36,10 @@ public class MainView extends VerticalLayout {
         buildChat();
     }
 
-//    ToDO remove login form
     private void buildLogin() {
         login = new VerticalLayout() {{
             TextField field = new TextField();
-            field.setValue(u.getFullName());
+            field.setValue(authUser.getFullName());
             field.setReadOnly(true);
             field.setPlaceholder("Please, introduce yourself");
             add(
@@ -77,7 +75,7 @@ public class MainView extends VerticalLayout {
                 new HorizontalLayout() {{
                     add(
                             field,
-                            new Button("➡") {{
+                            new Button("🏳‍🌈") {{
                                 addClickListener(click -> {
                                     storage.addRecord(user, field.getValue());
                                     field.clear();

@@ -6,12 +6,11 @@
   <title>Edit profile</title>
   <link rel="stylesheet" href="/update-user.css">
 
-
 </head>
 <body>
 <div class="container">
   <div class="content">
-    <form th:action="@{|/posts/update|}" th:object="${post}" enctype="multipart/form-data" method="POST">
+    <form th:action="@{|/posts/update/|}" th:object="${post}" enctype="multipart/form-data" method="POST">
       <div class="user-details">
         <input hidden type="number" th:field="*{id}" id="id" th:value="*{id}"/>
         <div class="input-box">
@@ -38,6 +37,6 @@
   </div>
 </div>
 
-
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </body>
 </html>

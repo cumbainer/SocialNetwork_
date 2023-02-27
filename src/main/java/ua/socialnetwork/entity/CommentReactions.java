@@ -15,11 +15,11 @@ public class CommentReactions {
     @Column(name = "reaction_id")
     private int id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "user_id")
     private User user;
 

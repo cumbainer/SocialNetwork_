@@ -3,26 +3,28 @@ package ua.socialnetwork.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.modelmapper.ModelMapper;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ua.socialnetwork.repo.UserRepo;
-import ua.socialnetwork.security.SecurityUser;
+import ua.socialnetwork.dto.PostDto;
 import ua.socialnetwork.entity.Post;
 import ua.socialnetwork.entity.enums.PostAction;
+import ua.socialnetwork.repo.UserRepo;
+import ua.socialnetwork.security.SecurityUser;
 import ua.socialnetwork.service.PostService;
 import ua.socialnetwork.service.UserService;
 
 import java.time.LocalDateTime;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping({"/posts", "/"})
 @Slf4j
-@AllArgsConstructor
 public class PostController {
     private final UserService userService;
     private final PostService postService;
@@ -31,101 +33,71 @@ public class PostController {
 
 
     @GetMapping("/feed")
-    public String getAll(Model model){
-        boolean ifImageIsPresent = false;
+    public String getAll(@AuthenticationPrincipal SecurityUser authUser, Model model) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        //ToDO put in try catch
-        SecurityUser user = (SecurityUser) authentication.getPrincipal();
-
-        if(user.getImages().size() > 0){
-            ifImageIsPresent = true;
-        }
-
-        model.addAttribute("ifImageIsPresent", ifImageIsPresent);
+        model.addAttribute("imageIsPresent", authUser.getImages().size() > 0);
+        model.addAttribute("posts", postService.getAll());
         model.addAttribute("newPost", new Post());
         model.addAttribute("users", userService.getAll());
-        model.addAttribute("posts", postService.postPreparation(userRepo.getById((int) user.getId())));
-        model.addAttribute("auth", authentication);
+        model.addAttribute("posts", postService.postPreparation(userRepo.getById((int)authUser.getId())));
 
         return "feed";
     }
 
-    @PostMapping("/new/{username}")
+    @PreAuthorize("hasRole('ROLE_ADMIM') or authentication.principal.username == #username")
+    @PostMapping("/new/{username}/")
     public String create(@PathVariable("username") String username, Post post,
-                            @RequestParam(value = "postImage", required = false) MultipartFile postImage, BindingResult result){
-        post.setUser(userService.readByUsername(username));
+                         @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
+
+        post.setUser(userService.returnUserByUsername(username));
 
         postService.create(post, postImage);
         log.info("From PostController a Post has been created, id: " + post.getId());
         return "redirect:/feed";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or authentication.principal.id == @postServiceImpl.readById(#postId).user.id")
+    @GetMapping("/{post_id}/update/")
+    public String editForm(@PathVariable("post_id") Integer postId, Model model) {
 
-    @GetMapping("/update/{post_id}")
-    public String editForm(@PathVariable("post_id") Integer id, Model model){
-        Post post = postService.readById(id);
-
-        model.addAttribute("post", post);
+        model.addAttribute("post", postService.readById(postId));
 
         return "update-post";
     }
 
-    @PostMapping("/update")
-    public String edit(Post post, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage ){
+    @PreAuthorize("hasRole('ROLE_ADMIM') or #postDto.user.id == authentication.principal.id")
+    @PostMapping("/update/")
+    public String edit(PostDto postDto, BindingResult result, @RequestParam(value = "postImage", required = false) MultipartFile postImage) {
 
-        if(result.hasErrors()){
-            log.warn("Binding result had an error in Post Controller update with post, id: " + post.getId());
+        if (result.hasErrors()) return "update-post";
 
-            return "update-post";
-        }
-
-        log.info("A post has been edited " + post.getId());
-        postService.update(post, postImage);
-        post.setEditionDate(LocalDateTime.now());
+        postDto.setEditionDate(LocalDateTime.now());
+        postService.update(postDto, postImage);
 
         return "redirect:/feed";
     }
-    @GetMapping("/delete/{post_id}")
-    public String delete(@PathVariable("post_id") Integer post_id){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
 
-        String username = u.getUsername();
+    @PreAuthorize("hasRole('ROLE_ADMIM') or @postServiceImpl.readById(#postId).user.id == authentication.principal.id")
+    @GetMapping("/{post_id}/delete/")
+    public String delete(@PathVariable("post_id") Integer postId, @AuthenticationPrincipal SecurityUser authUser) {
 
-        if(post_id != 0){
-            log.error("An error occurred in Post Controller, id " + post_id );
-            postService.delete(post_id);
-        }
-        log.info("A post with id" + post_id+ "has been deleted");
+        postService.delete(postId);
 
-        return "redirect:/users/"+username;
+        return "redirect:/users/" + authUser.getUsername();
     }
 
-    @GetMapping("/like/{post_id}")
-    public String like(@PathVariable("post_id") Integer post_id, Model model){
-
-        //ToDO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
-        Post post = postService.readById(post_id);
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SecurityUser u = (SecurityUser) authentication.getPrincipal();
-
-
+    @GetMapping("/{post_id}/like/")
+    public String like(@PathVariable("post_id") Integer postId) {
+        Post post = postService.returnPostEntityById(postId);
 
         postService.makeReaction(post, PostAction.LIKE);
-
-
         postService.create(post);
         return "redirect:/feed";
     }
 
-    @GetMapping("/dislike/{post_id}")
-    public String dislike(@PathVariable("post_id") Integer post_id, Model model){
-
-        //ToDO fix likeCounter (attach to an post , the bug is each every post gets all previous post likes)
-        Post post = postService.readById(post_id);
+    @GetMapping("/{post_id}/dislike/")
+    public String dislike(@PathVariable("post_id") Integer postId) {
+        Post post = postService.returnPostEntityById(postId);
 
         postService.makeReaction(post, PostAction.DISLIKE);
         postService.create(post);

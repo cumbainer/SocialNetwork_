@@ -1,4 +1,4 @@
-package ua.socialnetwork.Dto;
+package ua.socialnetwork.dto;
 
 import lombok.Getter;
 import lombok.Setter;

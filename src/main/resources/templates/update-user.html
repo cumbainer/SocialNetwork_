@@ -53,28 +53,34 @@
         </div>
       </div>
       <div class="gender-details">
-        <input type="radio" name="gender" id="dot-1">
-        <input type="radio" name="gender" id="dot-2">
-        <input type="radio" name="gender" id="dot-3">
-        <div class="select">
+        <div class="input-box">
           <span class="details">Gender</span>
-          <select name="format" id="format" th:field="*{gender}" >
+          <div class="gender-details">
+            <input type="radio" name="gender" id="dot-1">
+            <input type="radio" name="gender" id="dot-2">
+            <input type="radio" name="gender" id="dot-3">
+            <div class="select">
+              <select name="format" id="format" th:field="*{gender}" >
 
-            <option th:each="gender : ${T(ua.socialnetwork.entity.enums.Gender).values()}"
-                    th:value="${gender}"
-                    th:text="${gender}">
-            </option>
-          </select>
+                <option th:each="gender : ${T(ua.socialnetwork.entity.enums.Gender).values()}"
+                        th:value="${gender}"
+                        th:text="${gender}">
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
 
         <div class="input-box">
-          <span class="details">Edit profile picture</span>
-          <input  type="file" name="userImage">
+          <span class="details">Profile image</span>
+          <div id="img-preview"></div>
+          <div class="upload">
+            <button type = "button" class = "btn-warning">
+              <i class = "fa fa-upload"></i> Upload File
+              <input id="choose-file" type="file" name="userImage" accept="image/png, image/gif, image/jpeg">
+            </button>
+          </div>
         </div>
-
-
-
-
 
       </div>
       <div class="button" >
@@ -84,6 +90,25 @@
   </div>
 </div>
 
+<script>
+  const chooseFile = document.getElementById("choose-file");
+  const imgPreview = document.getElementById("img-preview");
 
+  function getImgData() {
+    const files = chooseFile.files[0];
+    if (files) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", function () {
+        imgPreview.style.display = "block";
+        imgPreview.innerHTML = '<img src="' + this.result + '" />';
+      });
+    }
+  }
+  chooseFile.addEventListener("change", function () {
+    getImgData();
+  });
+</script>
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 </body>
 </html>

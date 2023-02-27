@@ -4,9 +4,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ua.socialnetwork.dto.PostDto;
 import ua.socialnetwork.entity.*;
 import ua.socialnetwork.entity.enums.PostAction;
 import ua.socialnetwork.repo.CommentReactionRepo;
@@ -16,6 +18,7 @@ import ua.socialnetwork.service.PostService;
 
 
 import java.lang.reflect.Array;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,8 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class PostServiceImpl implements PostService {
-
     private PostRepo postRepo;
+    private ModelMapper modelMapper;
 
     private CommentRepository commentRepository;
 
@@ -33,10 +36,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post create(Post post) {
-        //TODO make validations and exc handler
-//        log.info("A post " + post.toString() + " was created in PostServiceImpl");
-
-//        post.setCreationDate(LocalDateTime.now());
         return postRepo.save(post);
     }
 
@@ -44,26 +43,22 @@ public class PostServiceImpl implements PostService {
     public Post create(Post post, MultipartFile postImage) {
         PostImage image;
 
+
         if (postImage.getSize() != 0) {
             image = toImageEntity(postImage);
             post.setImageToPost(image);
         }
 
-        //TODO make validations and exc handler
-        log.info("A post " + post.toString() + " was created in PostServiceImpl");
+        log.info("A post with id: " + post.getId() + " was created");
 
         post.setCreationDate(LocalDateTime.now());
         return postRepo.save(post);
     }
 
     @Override
-    public Post update(Post post) {
-        return null;
-    }
-
-    @Override
-    public Post update(Post post, MultipartFile postImage) {
+    public Post update(PostDto postDto, MultipartFile postImage) {
         PostImage image;
+        Post post = modelMapper.map(postDto, Post.class);
 
         if (postImage.getSize() != 0) {
             image = toImageEntity(postImage);
@@ -71,41 +66,43 @@ public class PostServiceImpl implements PostService {
         }
 
 
+        log.info("A post with id: " + post.getId() + " was updated");
+
         post.setEditionDate(LocalDateTime.now());
         return postRepo.save(post);
     }
 
+    @Override
+    public Post returnPostEntityById(Integer postId) {
+        return postRepo.findById(postId).orElseThrow(
+                () -> new EntityNotFoundException("Post with id: " + postId + "has not been found"));
+    }
 
     @Override
-    public Post readById(int id) {
-        log.info("A post with id: " + id + " was read in PostServiceImpl");
-        return postRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Post with id: " + id + "has not been found"));
+    public PostDto readById(int id) {
+        return postRepo.findById(id).map(post -> modelMapper.map(post, PostDto.class)).orElseThrow(
+                () -> new EntityNotFoundException("Post with id: " + id + "has not been found"));
     }
 
     @Override
     public void delete(int id) {
-
-        postRepo.delete(readById(id));
+        if (id != 0) {
+            postRepo.deleteById(id);
+            log.info("A post with id" + id + "has been deleted");
+        }
+        log.error("An error occurred in Post deletion with id: " + id);
     }
 
     @Override
-    public List<Post> getAll() {
-        //ToDO add validation and stuff later
-
-
-        return postRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    public List<PostDto> getAll() {
+        return postRepo.findAll(Sort.by(Sort.Direction.DESC, "id")).stream()
+                .map(post -> modelMapper.map(post, PostDto.class)).toList();
     }
 
     @Override
-    public List<Post> getByUserId(int userId) {
-        return null;
-    }
-
-    @Override
-    public List<Post> getPostsByUser_Username(String username) {
-        List<Post> posts = postRepo.getPostsByUser_Username(username, Sort.by(Sort.Direction.DESC, "id"));
-        return posts;
-
+    public List<PostDto> getPostsByUserUsername(String username) {
+        return postRepo.getPostsByUser_Username(username, Sort.by(Sort.Direction.DESC, "id")).stream()
+                .map(post -> modelMapper.map(post, PostDto.class)).toList();
     }
 
     @SneakyThrows
@@ -116,42 +113,49 @@ public class PostServiceImpl implements PostService {
         image.setContentType(postImage.getContentType());
         image.setSize(postImage.getSize());
         image.setBytes(postImage.getBytes());
+
         return image;
     }
 
-    public void makeReaction(Post post, PostAction action) {
-        int likeCounter = post.getLikeCounter();
-        int dislikeCounter = post.getDislikeCounter();
+
+    //Needed to put like/dislike on a post
+    public void makeReaction (Post postDto, PostAction action){
+
+        int likeCounter = postDto.getLikeCounter();
+        int dislikeCounter = postDto.getDislikeCounter();
 
         switch (action) {
             case LIKE -> {
-                post.setLiked(true);
+                postDto.setLiked(true);
                 likeCounter++;
-                post.setLikeCounter(likeCounter);
+                postDto.setLikeCounter(likeCounter);
                 if (dislikeCounter != 0) {
                     dislikeCounter--;
 
                 }
-                post.setDislikeCounter(dislikeCounter);
-                post.setDisliked(false);
-                log.info("Post with id: " + post.getId() + " is liked");
+                postDto.setDislikeCounter(dislikeCounter);
+                postDto.setDisliked(false);
+                log.info("Post with id: " + postDto.getId() + " is liked");
             }
             case DISLIKE -> {
-                post.setDisliked(true);
+                postDto.setDisliked(true);
                 dislikeCounter++;
-                post.setDislikeCounter(dislikeCounter);
+                postDto.setDislikeCounter(dislikeCounter);
                 if (likeCounter != 0) {
                     likeCounter--;
 
                 }
-                post.setLikeCounter(likeCounter);
-                post.setLiked(false);
-                log.info("Post with id: " + post.getId() + " is disliked");
+                postDto.setLikeCounter(likeCounter);
+                postDto.setLiked(false);
+                log.info("Post with id: " + postDto.getId() + " is disliked");
             }
         }
     }
 
-    public List postPreparation(User user) {
+
+
+
+    public List<Object> postPreparation(User user) {
         List<Object> dataPosts = new ArrayList<>();
 
         int likeSum;
@@ -201,4 +205,5 @@ public class PostServiceImpl implements PostService {
         }
         return dataPosts;
     }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -19,7 +20,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/api/**").permitAll()
                 .requestMatchers("/users/create").permitAll()
-                .requestMatchers("/feed").permitAll()
                 .requestMatchers("/users/create/continue/**").permitAll()
                 .and()
 
@@ -44,4 +44,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
+
 }

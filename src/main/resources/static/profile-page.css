@@ -3,9 +3,13 @@
 }
 
 body {
+    min-height: 100vh;
     margin: 40px 0px;
     background-color: #385591;
 
+}
+footer{
+    margin-top: auto;
 }
 
 
@@ -956,9 +960,9 @@ button{
 }
 
 .btn{
-    font-size: 13px;
-    width: 20px;
-    height: 13px;
+    font-size: 17px;
+    width: 150px;
+    height: 38px;
 
 }
 .btn:focus {
@@ -1077,19 +1081,14 @@ button{
     transition: .3s ease-in;
     cursor: pointer;
 }
-/*#profile-pic {*/
-/*    width: 100px;*/
-/*    height: 100px;*/
-/*    border-radius: 3px;*/
-/*    margin-top: 28px;*/
-/*    overflow: hidden;*/
-/*    box-shadow: 0 0 0 5px #fff;*/
-/*}*/
-
-/*#profile-pic img {*/
-/*    width: 80%;*/
-/*}*/
-
+.image-for-profile{
+    width: 180px;
+    height: 180px;
+}
+.dp-profile-round-pic{
+    width: 40px;
+    height: 40px;
+}
 .post .post-bottom .action:hover{
     background:#eee;
 }
@@ -1101,7 +1100,7 @@ button{
 .like__btn {
     padding: 10px 15px;
     /*background: #d74;*/
-    background: forestgreen;
+    background: slateblue;
 
     font-size: 18px;
     font-family: "Open Sans", sans-serif;
@@ -1113,7 +1112,7 @@ button{
 }
 .like__btn-2 {
     padding: 10px 15px;
-    background: forestgreen;
+    background: slateblue;
     font-size: 18px;
     font-family: "Open Sans", sans-serif;
     border-radius: 5px;
@@ -1134,7 +1133,7 @@ button{
 }
 /*BUTTONS ADD FRIEND, WRITE MESSAGE ETC*/
 .button-44 {
-    background: forestgreen;
+    background: slateblue;
     border-radius: 11px;
     box-sizing: border-box;
     color: #fff;
@@ -1244,7 +1243,6 @@ nav .nav-middle a > i{
 }
 
 nav .nav-right .profile, .container .left-panel .profile{
-    background: url('./images/dp.jpg');
     height:30px;
     width:30px;
     background-size: cover;
@@ -1269,4 +1267,8 @@ nav .nav-right a > i{
 }
 nav .input-search:focus-visible{
     outline-width: 0!important;
+}
+
+.container-fluid{
+    background: lightskyblue;
 }
