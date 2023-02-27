@@ -80,6 +80,9 @@ public class SecurityUser implements UserDetails {
     public int getImage() {
         return user.getImages().get(0).getId();
     }
+    public int getId(){
+        return user.getId();
+    }
 
     //todo refactor
     public int getImageForFeed(){
